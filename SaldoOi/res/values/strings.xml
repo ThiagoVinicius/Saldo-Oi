@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, Main!</string>
+    <string name="app_name">Saldo Oi</string>
+    <string-array name="remetentes_conhecidos">
+        <item >+550310006092</item>
+    </string-array>
+
+</resources>
