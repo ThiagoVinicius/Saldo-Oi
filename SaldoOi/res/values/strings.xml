@@ -6,5 +6,23 @@
     <string-array name="remetentes_conhecidos">
         <item >+550310006092</item>
     </string-array>
+    
+        
+    <string-array name="renova_dados_valores">
+        <item >5MB (1 dia)</item>
+        <item >20MB (1 semana) </item>
+        <item >50MB (1 mes)</item>
+    </string-array>
+    <string-array name="renova_dados_destinatarios">
+        <item >3305</item>
+        <item >3320</item>
+        <item >3350</item>
+    </string-array>
+    <string-array name="renova_dados_texto_mensagem">
+        <item >Oi</item>
+        <item >Oi</item>
+        <item >Oi</item>
+    </string-array>
+    
 
 </resources>
