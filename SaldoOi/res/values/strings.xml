@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, Main!</string>
     <string name="app_name">Saldo Oi</string>
     <string-array name="remetentes_conhecidos">
         <item >+550310006092</item>
     </string-array>
     
         
-    <string-array name="renova_dados_valores">
+    <string-array name="renova_dados_valores_descricao">
         <item >5MB (1 dia)</item>
+        
+        <!-- TODO: Não suportados ainda pela aplicação
         <item >20MB (1 semana) </item>
         <item >50MB (1 mes)</item>
+        -->
+        
     </string-array>
     <string-array name="renova_dados_destinatarios">
         <item >3305</item>
@@ -23,6 +25,21 @@
         <item >Oi</item>
         <item >Oi</item>
     </string-array>
+    <array name="renova_dados_validade_dias">
+        <item >1</item>
+        <item >7</item>
+        <item >30</item>
+    </array>
+    
+    <string name="preferencias_titulo_renova_dados">Plano de dados: Renovação automática</string>
+    <string name="preferencias_titulo_renova_dados_habilitado">Habilitar renovação automática</string>
+    <string name="preferencias_titulo_renova_dados_valor">Valor</string>
+    <string-array name="preferencias_renova_dados_valores">
+        <item >0</item>
+        <item >1</item>
+        <item >2</item>
+    </string-array>
+    <string name="view_principal_preferencias">Preferências</string>
     
 
 </resources>

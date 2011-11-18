@@ -1,15 +1,17 @@
 package com.thiagovinicius.android.saldooi.agendado;
 
-import static com.thiagovinicius.android.saldooi.util.Utils.desabilitaComponente;
+import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME;
+import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.EXTRA_HABILITAR;
 import static com.thiagovinicius.android.saldooi.util.Utils.enviaMensagem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.thiagovinicius.android.saldooi.R;
 
@@ -17,24 +19,29 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	
 	public static final String ACTION_RENOVAR_PLANO_DADOS = 
 		RenovaPlanoDados.class.getCanonicalName() + ".ACTION_RENOVAR_PLANO_DADOS";
+	public static final String EXTRA_AGENDADO = 
+		RenovaPlanoDados.class.getCanonicalName() + ".EXTRA_AGENDADO";
 	
-	private static final Logger logger = LoggerFactory.getLogger(RenovaPlanoDados.class);
+	
+	private static final Logger logger = LoggerFactory.getLogger(RenovaPlanoDados.class.getSimpleName());
 
-	//TODO
-	private boolean isEnabled() {
-		return true;
+	private boolean agendamentoHabilitado(Context ctx) {
+		SharedPreferences pref = 
+			PreferenceManager.getDefaultSharedPreferences(ctx);
+		return pref.getBoolean("renova_dados_habilitado", false);
 	}
 	
 	/**
-	 * Recupera o identificador do plano de dados configurado, a partir do banco
-	 * de dados -- ou o que quer que seja utilizado quando essa app estiver 
-	 * pronta. 
+	 * Recupera o identificador do plano de dados configurado, a partir das
+	 * preferências. 
 	 *  
-	 * @return
+	 * @return 
 	 */
-	//TODO
-	private int getIdPlano () {
-		return 0;
+	private int getIdPlano (Context ctx) {
+		SharedPreferences pref = 
+			PreferenceManager.getDefaultSharedPreferences(ctx);
+		String result = pref.getString("renova_dados_tipo", "0");
+		return new Integer(result);
 	}
 	
 	private String getTextoPlano (Context ctx, int idPlano) {
@@ -50,7 +57,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	}
 	
 	private void renovaPlano (Context ctx) {
-		int idPlano = getIdPlano();
+		int idPlano = getIdPlano(ctx);
 		String destinatario = getDestinatario(ctx, idPlano);
 		String textoMensagem = getTextoPlano(ctx, idPlano);
 		logger.info("Enviando mensagem. Destinatário: {}, Texto: {}",
@@ -58,21 +65,31 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 		enviaMensagem(destinatario, textoMensagem);
 	}
 	
-	//XXX talvez seja necessario implementar uma especie de ONE_SHOT aqui, 
-	//    para o caso de haver um botao "Renovar agora", em alguma activity
-	//    futura.
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
-		if (isEnabled()) {
-			logger.info("Renovando plano de dados.");
-			renovaPlano(ctx);
-		} else {
-			//XXX avaliar a alternativa de desabilitar o alarme que envia o Intent
-			logger.info("Funcionalidade desabilitada pelo usuário. Desabilitando componente.");
-			desabilitaComponente(
-					ctx.getPackageManager(), 
-					new ComponentName(ctx, getClass()));
+		
+		if (ACTION_RENOVAR_PLANO_DADOS.equals(intent.getAction()) == false) {
+			return;
 		}
+		
+		if (intent.getBooleanExtra(EXTRA_AGENDADO, false)) {
+			
+			if (agendamentoHabilitado(ctx)) {
+				logger.info("Renovação disparada por alarme.");
+			} else {
+				logger.info("Renovação disparada por alarme, porém desabilitada.");
+				Intent desabilitarAlarme = new Intent();
+				desabilitarAlarme.setAction(ACTION_ALTERA_ALARME);
+				desabilitarAlarme.putExtra(EXTRA_HABILITAR, false);
+				ctx.sendBroadcast(desabilitarAlarme);
+				return;
+			}
+			
+		}
+		
+		logger.info("Renovando plano de dados.");
+		renovaPlano(ctx);
+		
 	}
 
 }

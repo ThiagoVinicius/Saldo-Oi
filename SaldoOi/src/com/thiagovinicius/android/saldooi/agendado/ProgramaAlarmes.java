@@ -1,9 +1,9 @@
 package com.thiagovinicius.android.saldooi.agendado;
 
 import static com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.ACTION_RENOVAR_PLANO_DADOS;
+import static com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.EXTRA_AGENDADO;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,25 +16,52 @@ import android.content.Intent;
 
 public class ProgramaAlarmes extends BroadcastReceiver {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProgramaAlarmes.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProgramaAlarmes.class.getSimpleName());
+	
+	public static final String ACTION_ALTERA_ALARME = 
+		ProgramaAlarmes.class.getCanonicalName() + ".ACTION_ALTERA_ALARME";
+	public static final String EXTRA_HABILITAR =
+		ProgramaAlarmes.class.getCanonicalName() + ".EXTRA_HABILITAR";
 	
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
+		if (ACTION_ALTERA_ALARME.equals(intent.getAction())) {
+			if (intent.getBooleanExtra(EXTRA_HABILITAR, true)) {
+				habilitaRenovacao(ctx);
+			} else {
+				desabilitaRenovacao(ctx);
+			}
+		}
+	}
+	
+	private void habilitaRenovacao(Context ctx) {
 		logger.info("Programando renovação de saldo.");
 		Calendar horaAlvo = Calendar.getInstance();
-		horaAlvo.set(Calendar.HOUR_OF_DAY, 1);
-		horaAlvo.set(Calendar.MINUTE, 0);
+		horaAlvo.set(Calendar.HOUR_OF_DAY, 0);
+		horaAlvo.set(Calendar.MINUTE, 10);
 		horaAlvo.set(Calendar.SECOND, 0);
 		horaAlvo.set(Calendar.MILLISECOND, 0);
-		while (horaAlvo.before(new Date())) { // Já é depois de uma da manhã
+		while (horaAlvo.before(Calendar.getInstance())) { // Oops, já passou
 			horaAlvo.roll(Calendar.DAY_OF_YEAR, true);
 		}
 		logger.info("Renovação de saldo programada para {}", horaAlvo);
 		AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC, horaAlvo.getTimeInMillis(), 
-				AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(ctx, 0, 
-						new Intent(ACTION_RENOVAR_PLANO_DADOS), 
-						PendingIntent.FLAG_UPDATE_CURRENT));
+				AlarmManager.INTERVAL_DAY, getIntentRenovacao(ctx));
 	}
-
+	
+	private void desabilitaRenovacao (Context ctx) {
+		logger.info("Desprogramando renovação de saldo.");
+		AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+		am.cancel(getIntentRenovacao(ctx));
+	}
+	
+	private PendingIntent getIntentRenovacao (Context ctx) {
+		Intent i = new Intent();
+		i.setAction(ACTION_RENOVAR_PLANO_DADOS);
+		i.putExtra(EXTRA_AGENDADO, true);
+		return PendingIntent.getBroadcast(ctx, 0, i, 
+			PendingIntent.FLAG_UPDATE_CURRENT);
+	}
+	
 }
