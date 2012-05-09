@@ -16,9 +16,9 @@
         
     </string-array>
     <string-array name="renova_dados_destinatarios">
-        <item >3305</item>
-        <item >3320</item>
-        <item >3350</item>
+        <item >3505</item>
+        <item >3520</item>
+        <item >3550</item>
     </string-array>
     <string-array name="renova_dados_texto_mensagem">
         <item >Oi</item>
