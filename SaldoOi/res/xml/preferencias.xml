@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory 
-        android:title="@string/preferencias_titulo_renova_dados">
-        
-        <CheckBoxPreference 
+    <PreferenceCategory android:title="@string/preferencias_titulo_renova_dados" >
+        <CheckBoxPreference
             android:key="renova_dados_habilitado"
             android:title="@string/preferencias_titulo_renova_dados_habilitado" />
-        
-        <ListPreference 
-            android:layout="?android:attr/preferenceLayoutChild"
+
+        <ListPreference
             android:dependency="renova_dados_habilitado"
-            android:key="renova_dados_tipo" 
-            android:title="@string/preferencias_titulo_renova_dados_valor"
+            android:dialogTitle="@string/preferencias_titulo_renova_dados_valor"
             android:entries="@array/renova_dados_valores_descricao"
             android:entryValues="@array/preferencias_renova_dados_valores"
-            android:dialogTitle="@string/preferencias_titulo_renova_dados_valor"/>
-
-        
+            android:key="renova_dados_tipo"
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:title="@string/preferencias_titulo_renova_dados_valor" />
     </PreferenceCategory>
-    
 
 </PreferenceScreen>

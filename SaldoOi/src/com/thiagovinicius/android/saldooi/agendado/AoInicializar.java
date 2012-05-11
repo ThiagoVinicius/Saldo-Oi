@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.agendado;
 
@@ -31,12 +31,12 @@ public class AoInicializar extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-			SharedPreferences prefs = 
-				PreferenceManager.getDefaultSharedPreferences(ctx);
-			
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(ctx);
+
 			Intent i = new Intent();
 			i.setAction(ACTION_ALTERA_ALARME);
-			i.putExtra(EXTRA_HABILITAR, 
+			i.putExtra(EXTRA_HABILITAR,
 					prefs.getBoolean("renova_dados_habilitado", false));
 			ctx.sendBroadcast(i);
 		}

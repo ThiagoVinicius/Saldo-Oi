@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.sms;
 
@@ -36,29 +36,29 @@ public class FiltroRemetente extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
-        Bundle extras = intent.getExtras();
-        if (extras == null)
-            return;
-        
-        Set<String> remetentes = new HashSet<String>(Arrays.asList(
-        	ctx.getResources().getStringArray(R.array.remetentes_conhecidos)));
+		Bundle extras = intent.getExtras();
+		if (extras == null)
+			return;
 
-        Object[] pdus = (Object[]) extras.get("pdus");
+		Set<String> remetentes = new HashSet<String>(Arrays.asList(ctx
+				.getResources().getStringArray(R.array.remetentes_conhecidos)));
 
-        for (int i = 0; i < pdus.length; i++) {
-        	
-        	byte mensagemRaw[] = (byte[]) pdus[i];
-            SmsMessage message = SmsMessage.createFromPdu(mensagemRaw);
-            String fromAddress = message.getOriginatingAddress();
-            
-            if (remetentes.contains(fromAddress)) {
-            	Intent di = new Intent(ACTION_PROCESSAR_DADOS);
-            	di.putExtra("mensagem", mensagemRaw);
-            	ctx.sendBroadcast(di);
-            }
-            
-        }
-        
+		Object[] pdus = (Object[]) extras.get("pdus");
+
+		for (int i = 0; i < pdus.length; i++) {
+
+			byte mensagemRaw[] = (byte[]) pdus[i];
+			SmsMessage message = SmsMessage.createFromPdu(mensagemRaw);
+			String fromAddress = message.getOriginatingAddress();
+
+			if (remetentes.contains(fromAddress)) {
+				Intent di = new Intent(ACTION_PROCESSAR_DADOS);
+				di.putExtra("mensagem", mensagemRaw);
+				ctx.sendBroadcast(di);
+			}
+
+		}
+
 	}
 
 }

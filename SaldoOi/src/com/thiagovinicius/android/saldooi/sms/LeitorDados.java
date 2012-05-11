@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.sms;
 
@@ -27,23 +27,22 @@ import android.telephony.SmsMessage;
 public abstract class LeitorDados extends BroadcastReceiver {
 
 	public static final String ACTION_PROCESSAR_DADOS = "com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS";
-	
+
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
-        Bundle extras = intent.getExtras();
-        if (extras == null)
-            return;
-        
-        byte[] mensagemRaw = (byte[]) extras.get("mensagem");
-        SmsMessage mensagem = SmsMessage.createFromPdu(mensagemRaw);
-        
-        if (mensagem.getMessageBody() != null) {
-        	processaMensagem(mensagem);
-        }
-        
-        
+		Bundle extras = intent.getExtras();
+		if (extras == null)
+			return;
+
+		byte[] mensagemRaw = (byte[]) extras.get("mensagem");
+		SmsMessage mensagem = SmsMessage.createFromPdu(mensagemRaw);
+
+		if (mensagem.getMessageBody() != null) {
+			processaMensagem(mensagem);
+		}
+
 	}
-	
-	public abstract void processaMensagem (SmsMessage mensagem);
+
+	public abstract void processaMensagem(SmsMessage mensagem);
 
 }

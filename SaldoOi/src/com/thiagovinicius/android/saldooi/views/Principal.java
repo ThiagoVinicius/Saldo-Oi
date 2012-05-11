@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.views;
 
@@ -37,27 +37,27 @@ public class Principal extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Map<String, Object> entries = new HashMap<String, Object>();
 		entries.put("intent", new Intent(this, Preferencias.class));
 		entries.put("titulo", "Preferências");
-		
+
 		List<Map<String, Object>> entriesList = new ArrayList<Map<String, Object>>();
 		entriesList.add(entries);
-		
-		
-		setListAdapter(new SimpleAdapter(this, entriesList, R.layout.item_lista, 
-				new String[] { "titulo" }, new int[] { R.id.layout_texto_1 }));
-		
+
+		setListAdapter(new SimpleAdapter(this, entriesList,
+				R.layout.item_lista, new String[] { "titulo" },
+				new int[] { R.id.layout_texto_1 }));
+
 	}
-	
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        @SuppressWarnings("rawtypes")
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		@SuppressWarnings("rawtypes")
 		Map map = (Map) l.getItemAtPosition(position);
 
-        Intent intent = (Intent) map.get("intent");
-        startActivity(intent);
-    }
-	
+		Intent intent = (Intent) map.get("intent");
+		startActivity(intent);
+	}
+
 }

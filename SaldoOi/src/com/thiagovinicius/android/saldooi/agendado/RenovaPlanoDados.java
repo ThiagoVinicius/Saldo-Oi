@@ -16,47 +16,47 @@ import android.preference.PreferenceManager;
 import com.thiagovinicius.android.saldooi.R;
 
 public class RenovaPlanoDados extends BroadcastReceiver {
-	
-	public static final String ACTION_RENOVAR_PLANO_DADOS = 
-		RenovaPlanoDados.class.getCanonicalName() + ".ACTION_RENOVAR_PLANO_DADOS";
-	public static final String EXTRA_AGENDADO = 
-		RenovaPlanoDados.class.getCanonicalName() + ".EXTRA_AGENDADO";
-	
-	
-	private static final Logger logger = LoggerFactory.getLogger(RenovaPlanoDados.class.getSimpleName());
+
+	public static final String ACTION_RENOVAR_PLANO_DADOS = RenovaPlanoDados.class
+			.getCanonicalName() + ".ACTION_RENOVAR_PLANO_DADOS";
+	public static final String EXTRA_AGENDADO = RenovaPlanoDados.class
+			.getCanonicalName() + ".EXTRA_AGENDADO";
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(RenovaPlanoDados.class.getSimpleName());
 
 	private boolean agendamentoHabilitado(Context ctx) {
-		SharedPreferences pref = 
-			PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
 		return pref.getBoolean("renova_dados_habilitado", false);
 	}
-	
+
 	/**
 	 * Recupera o identificador do plano de dados configurado, a partir das
-	 * preferências. 
-	 *  
-	 * @return 
+	 * preferências.
+	 * 
+	 * @return
 	 */
-	private int getIdPlano (Context ctx) {
-		SharedPreferences pref = 
-			PreferenceManager.getDefaultSharedPreferences(ctx);
+	private int getIdPlano(Context ctx) {
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
 		String result = pref.getString("renova_dados_tipo", "0");
 		return new Integer(result);
 	}
-	
-	private String getTextoPlano (Context ctx, int idPlano) {
-		String textosPlanos[] = ctx.getResources().
-			getStringArray(R.array.renova_dados_texto_mensagem);
+
+	private String getTextoPlano(Context ctx, int idPlano) {
+		String textosPlanos[] = ctx.getResources().getStringArray(
+				R.array.renova_dados_texto_mensagem);
 		return textosPlanos[idPlano];
 	}
-	
-	private String getDestinatario (Context ctx, int idPlano) {
-		String destinatarios[] = ctx.getResources().
-			getStringArray(R.array.renova_dados_destinatarios);
+
+	private String getDestinatario(Context ctx, int idPlano) {
+		String destinatarios[] = ctx.getResources().getStringArray(
+				R.array.renova_dados_destinatarios);
 		return destinatarios[idPlano];
 	}
-	
-	private void renovaPlano (Context ctx) {
+
+	private void renovaPlano(Context ctx) {
 		int idPlano = getIdPlano(ctx);
 		String destinatario = getDestinatario(ctx, idPlano);
 		String textoMensagem = getTextoPlano(ctx, idPlano);
@@ -64,16 +64,16 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 				destinatario, textoMensagem);
 		enviaMensagem(destinatario, textoMensagem);
 	}
-	
+
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
-		
+
 		if (ACTION_RENOVAR_PLANO_DADOS.equals(intent.getAction()) == false) {
 			return;
 		}
-		
+
 		if (intent.getBooleanExtra(EXTRA_AGENDADO, false)) {
-			
+
 			if (agendamentoHabilitado(ctx)) {
 				logger.info("Renovação disparada por alarme.");
 			} else {
@@ -84,12 +84,12 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 				ctx.sendBroadcast(desabilitarAlarme);
 				return;
 			}
-			
+
 		}
-		
+
 		logger.info("Renovando plano de dados.");
 		renovaPlano(ctx);
-		
+
 	}
 
 }

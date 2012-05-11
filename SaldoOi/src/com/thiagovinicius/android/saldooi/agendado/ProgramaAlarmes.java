@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.agendado;
 
@@ -33,14 +33,15 @@ import android.content.Context;
 import android.content.Intent;
 
 public class ProgramaAlarmes extends BroadcastReceiver {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ProgramaAlarmes.class.getSimpleName());
-	
-	public static final String ACTION_ALTERA_ALARME = 
-		ProgramaAlarmes.class.getCanonicalName() + ".ACTION_ALTERA_ALARME";
-	public static final String EXTRA_HABILITAR =
-		ProgramaAlarmes.class.getCanonicalName() + ".EXTRA_HABILITAR";
-	
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(ProgramaAlarmes.class.getSimpleName());
+
+	public static final String ACTION_ALTERA_ALARME = ProgramaAlarmes.class
+			.getCanonicalName() + ".ACTION_ALTERA_ALARME";
+	public static final String EXTRA_HABILITAR = ProgramaAlarmes.class
+			.getCanonicalName() + ".EXTRA_HABILITAR";
+
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		if (ACTION_ALTERA_ALARME.equals(intent.getAction())) {
@@ -51,7 +52,7 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 			}
 		}
 	}
-	
+
 	private void habilitaRenovacao(Context ctx) {
 		logger.info("Programando renovação de saldo.");
 		Calendar horaAlvo = Calendar.getInstance();
@@ -63,23 +64,25 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 			horaAlvo.roll(Calendar.DAY_OF_YEAR, true);
 		}
 		logger.info("Renovação de saldo programada para {}", horaAlvo);
-		AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC, horaAlvo.getTimeInMillis(), 
+		AlarmManager am = (AlarmManager) ctx
+				.getSystemService(Context.ALARM_SERVICE);
+		am.setRepeating(AlarmManager.RTC, horaAlvo.getTimeInMillis(),
 				AlarmManager.INTERVAL_DAY, getIntentRenovacao(ctx));
 	}
-	
-	private void desabilitaRenovacao (Context ctx) {
+
+	private void desabilitaRenovacao(Context ctx) {
 		logger.info("Desprogramando renovação de saldo.");
-		AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+		AlarmManager am = (AlarmManager) ctx
+				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getIntentRenovacao(ctx));
 	}
-	
-	private PendingIntent getIntentRenovacao (Context ctx) {
+
+	private PendingIntent getIntentRenovacao(Context ctx) {
 		Intent i = new Intent();
 		i.setAction(ACTION_RENOVAR_PLANO_DADOS);
 		i.putExtra(EXTRA_AGENDADO, true);
-		return PendingIntent.getBroadcast(ctx, 0, i, 
-			PendingIntent.FLAG_UPDATE_CURRENT);
+		return PendingIntent.getBroadcast(ctx, 0, i,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 	}
-	
+
 }

@@ -14,19 +14,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.util;
 
 import android.telephony.SmsManager;
 
 public class Utils {
-	
-	//XXX Deveriamos bloquear o retorno até que a mensagem seja entregue?
-	//    até que ela seja enviada?
-	public static void enviaMensagem (String destinatario, String texto) {
+
+	// XXX Deveriamos bloquear o retorno até que a mensagem seja entregue?
+	// até que ela seja enviada?
+	public static void enviaMensagem(String destinatario, String texto) {
 		SmsManager servicoSms = SmsManager.getDefault();
 		servicoSms.sendTextMessage(destinatario, null, texto, null, null);
 	}
-	
+
 }

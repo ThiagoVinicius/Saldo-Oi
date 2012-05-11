@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
-*/
+ */
 
 package com.thiagovinicius.android.saldooi.sms;
 
@@ -28,19 +28,22 @@ import android.telephony.SmsMessage;
 
 public class SaldoPrincipal extends LeitorDados {
 
-	private static final Pattern padrao = Pattern.compile("\\QOi, seu saldo e R$ \\E(\\d+[.]\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
-	private static final Logger logger = LoggerFactory.getLogger(SaldoPrincipal.class);
-	
+	private static final Pattern padrao = Pattern
+			.compile("\\QOi, seu saldo e R$ \\E(\\d+[.]\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
+	private static final Logger logger = LoggerFactory
+			.getLogger(SaldoPrincipal.class);
+
 	@Override
 	public void processaMensagem(SmsMessage mensagem) {
 		String texto = mensagem.getMessageBody();
 		Matcher comparador = padrao.matcher(texto);
 		int saldo;
 		String data;
-		
+
 		logger.debug("Recebida mensagem: \"{}\"", texto);
 		if (comparador.matches()) {
-			logger.debug("Ladies and gentleman, we got a match! ({} groups)", comparador.groupCount());
+			logger.debug("Ladies and gentleman, we got a match! ({} groups)",
+					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
 				saldo = (int) (new Double(comparador.group(1)) / 100d);
 				data = comparador.group(2);

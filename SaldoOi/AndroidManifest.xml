@@ -5,54 +5,50 @@
     android:versionName="0.1" >
 
     <uses-sdk android:minSdkVersion="8" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        
-        <activity android:name=".views.Principal"
-                  android:label="@string/app_name">
+        <activity
+            android:name=".views.Principal"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity android:name=".views.Preferencias" />
-        
-        <receiver android:name=".sms.FiltroRemetente">
+
+        <receiver android:name=".sms.FiltroRemetente" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name=".sms.SaldoPrincipal">
+        <receiver android:name=".sms.SaldoPrincipal" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name=".agendado.ProgramaAlarmes">
+        <receiver android:name=".agendado.ProgramaAlarmes" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name=".agendado.RenovaPlanoDados">
+        <receiver android:name=".agendado.RenovaPlanoDados" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.ACTION_RENOVAR_PLANO_DADOS" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name=".agendado.AoInicializar">
+        <receiver android:name=".agendado.AoInicializar" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        
     </application>
 
 </manifest>
