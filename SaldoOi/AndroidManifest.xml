@@ -23,7 +23,7 @@
         
         <activity android:name=".views.Preferencias" />
         
-        <receiver android:name=".sms.SmsOriginFilter">
+        <receiver android:name=".sms.FiltroRemetente">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>

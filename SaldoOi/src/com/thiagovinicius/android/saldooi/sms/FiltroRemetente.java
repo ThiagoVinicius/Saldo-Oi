@@ -32,7 +32,7 @@ import android.telephony.SmsMessage;
 
 import com.thiagovinicius.android.saldooi.R;
 
-public class SmsOriginFilter extends BroadcastReceiver {
+public class FiltroRemetente extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
