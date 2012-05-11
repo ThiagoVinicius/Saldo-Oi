@@ -24,27 +24,27 @@
         </activity>
         <activity android:name=".views.Preferencias" />
 
-        <receiver android:name=".sms.FiltroRemetente" >
+        <receiver android:name=".sms.FiltroRemetente" android:exported="true" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".sms.SaldoPrincipal" >
+        <receiver android:name=".sms.SaldoPrincipal" android:exported="false" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".agendado.ProgramaAlarmes" >
+        <receiver android:name=".agendado.ProgramaAlarmes" android:exported="false" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".agendado.RenovaPlanoDados" >
+        <receiver android:name=".agendado.RenovaPlanoDados" android:exported="false" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.ACTION_RENOVAR_PLANO_DADOS" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".agendado.AoInicializar" >
+        <receiver android:name=".agendado.AoInicializar" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
