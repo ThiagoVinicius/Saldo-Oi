@@ -32,8 +32,8 @@ verificaBaixa ()
 ERROR=0
 
 verificaBaixa slf4j-android-1.6.1-RC1.jar http://www.slf4j.org/android/slf4j-android-1.6.1-RC1.jar
-verificaBaixa ormlite-core-4.30.jar http://ormlite.com/releases/4.30/ormlite-core-4.30.jar
-verificaBaixa ormlite-android-4.30.jar http://ormlite.com/releases/4.30/ormlite-android-4.30.jar
+verificaBaixa ormlite-core-4.40.jar http://ormlite.com/releases/4.40/ormlite-core-4.40.jar
+verificaBaixa ormlite-android-4.40.jar http://ormlite.com/releases/4.40/ormlite-android-4.40.jar
 
 if [ $ERROR -gt 0 ]; then
   echo '######'
