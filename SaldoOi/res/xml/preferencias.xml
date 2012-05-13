@@ -2,12 +2,24 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/preferencias_titulo_renova_dados" >
+        <EditTextPreference
+            android:key="renova_dados_validade"
+            android:persistent="false"
+            android:selectable="false"
+            android:summary="@string/preferencias_descricao_dados_validade"
+            android:title="@string/preferencias_titulo_dados_validade" />
+        <EditTextPreference
+            android:key="renova_dados_agendado"
+            android:persistent="false"
+            android:selectable="false"
+            android:summary="@string/preferencias_descricao_dados_proximo"
+            android:title="@string/preferencias_titulo_dados_proximo" />
+
         <CheckBoxPreference
             android:key="renova_dados_habilitado"
             android:title="@string/preferencias_titulo_renova_dados_habilitado" />
 
         <ListPreference
-            android:dependency="renova_dados_habilitado"
             android:dialogTitle="@string/preferencias_titulo_renova_dados_valor"
             android:entries="@array/renova_dados_valores_descricao"
             android:entryValues="@array/preferencias_renova_dados_valores"

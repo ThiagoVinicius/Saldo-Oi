@@ -21,6 +21,7 @@ package com.thiagovinicius.android.saldooi.agendado;
 import static com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.ACTION_RENOVAR_PLANO_DADOS;
 import static com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.EXTRA_AGENDADO;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -31,6 +32,12 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
+import com.thiagovinicius.android.saldooi.db.PacoteDados;
 
 public class ProgramaAlarmes extends BroadcastReceiver {
 
@@ -45,36 +52,101 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		if (ACTION_ALTERA_ALARME.equals(intent.getAction())) {
+			AlarmManager am = (AlarmManager) ctx
+					.getSystemService(Context.ALARM_SERVICE);
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(ctx);
+
 			if (intent.getBooleanExtra(EXTRA_HABILITAR, true)) {
-				habilitaRenovacao(ctx);
+				habilitaRenovacao(ctx, prefs, am);
 			} else {
-				desabilitaRenovacao(ctx);
+				desabilitaRenovacao(ctx, prefs, am);
 			}
 		}
 	}
 
-	private void habilitaRenovacao(Context ctx) {
-		logger.info("Programando renovação de saldo.");
-		Calendar horaAlvo = Calendar.getInstance();
+	private Calendar dataValidade(Context ctx) throws SQLException {
+		Calendar dataAlvo = null;
+		AuxiliarOrm db = OpenHelperManager.getHelper(ctx, AuxiliarOrm.class);
+
+		try {
+			PacoteDados pacote = PacoteDados.encontraMaiorValidade(db
+					.pacoteDados());
+			if (pacote != null) {
+				dataAlvo = Calendar.getInstance();
+				dataAlvo.setTime(pacote.validade);
+			}
+			return dataAlvo;
+		} finally {
+			OpenHelperManager.releaseHelper();
+		}
+
+	}
+
+	private Calendar calculaHoraRenovacao(Calendar validade) {
+
+		Calendar horaAlvo;
+		Calendar hoje = Calendar.getInstance();
+
+		if (validade.before(hoje)) {
+			horaAlvo = hoje; // O plano esta vencido.
+		} else {
+			horaAlvo = validade;
+		}
+		// Nesse momento, a data está correta, resta apenas ajustar o horário
+
 		horaAlvo.set(Calendar.HOUR_OF_DAY, 0);
 		horaAlvo.set(Calendar.MINUTE, 10);
 		horaAlvo.set(Calendar.SECOND, 0);
 		horaAlvo.set(Calendar.MILLISECOND, 0);
-		while (horaAlvo.before(Calendar.getInstance())) { // Oops, já passou
-			horaAlvo.roll(Calendar.DAY_OF_YEAR, true);
+
+		if (horaAlvo.before(Calendar.getInstance())) {
+			// Temos que renovar hoje, porém já passamos da hora.
+			// Se não fizermos nada aqui, o alarme será programado no passado,
+			// e portanto, executado imediatamente.
 		}
-		logger.info("Renovação de saldo programada para {}", horaAlvo);
-		AlarmManager am = (AlarmManager) ctx
-				.getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC, horaAlvo.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY, getIntentRenovacao(ctx));
+
+		return horaAlvo;
 	}
 
-	private void desabilitaRenovacao(Context ctx) {
+	private void habilitaRenovacao(Context ctx, SharedPreferences prefs,
+			AlarmManager am) {
+		logger.info("Programando renovação de saldo.");
+		Calendar validade = null;
+
+		try {
+			validade = dataValidade(ctx);
+		} catch (SQLException ex) {
+			logger.warn("", ex);
+		}
+
+		if (validade == null) {
+			logger.warn("habilitaRenovacao(): validade == null.");
+			validade = Calendar.getInstance();
+		}
+
+		Calendar horaAlvo = calculaHoraRenovacao(validade);
+		logger.info("Renovação de saldo programada para {}", horaAlvo);
+
+		am.set(AlarmManager.RTC, horaAlvo.getTimeInMillis(),
+				getIntentRenovacao(ctx));
+
+		if (horaAlvo.after(Calendar.getInstance())) {
+			SharedPreferences.Editor ed = prefs.edit();
+			ed.putLong("renova_dados_agendado", horaAlvo.getTimeInMillis());
+			ed.commit();
+		}
+
+	}
+
+	private void desabilitaRenovacao(Context ctx, SharedPreferences prefs,
+			AlarmManager am) {
 		logger.info("Desprogramando renovação de saldo.");
-		AlarmManager am = (AlarmManager) ctx
-				.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(getIntentRenovacao(ctx));
+
+		SharedPreferences.Editor ed = prefs.edit();
+		ed.remove("renova_dados_agendado");
+		ed.commit();
 	}
 
 	private PendingIntent getIntentRenovacao(Context ctx) {

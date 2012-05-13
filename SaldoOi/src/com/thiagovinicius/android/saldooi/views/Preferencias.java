@@ -21,13 +21,18 @@ package com.thiagovinicius.android.saldooi.views;
 import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME;
 import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.EXTRA_HABILITAR;
 
-import com.thiagovinicius.android.saldooi.R;
+import java.util.Date;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
+import android.text.format.DateFormat;
+
+import com.thiagovinicius.android.saldooi.R;
 
 public class Preferencias extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
@@ -42,8 +47,13 @@ public class Preferencias extends PreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getPreferenceScreen().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);
+
+		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
+
+		prefs.registerOnSharedPreferenceChangeListener(this);
+		atualizaTipoRenovacao(prefs);
+		atualizaProximaRenovacao(prefs);
+		atualizaValidade(prefs);
 	}
 
 	@Override
@@ -65,6 +75,66 @@ public class Preferencias extends PreferenceActivity implements
 			sendBroadcast(i);
 
 		}
+		if ("renova_dados_tipo".equals(chave)) {
+			atualizaTipoRenovacao(prefs);
+		}
+		if ("renova_dados_agendado".equals(chave)) {
+			atualizaProximaRenovacao(prefs);
+		}
+		if ("renova_dados_validade".equals(chave)) {
+			atualizaValidade(prefs);
+		}
+	}
+
+	private void atualizaTipoRenovacao(SharedPreferences prefs) {
+		ListPreference seletorTipo = (ListPreference) findPreference("renova_dados_tipo");
+
+		String valores[] = getResources().getStringArray(
+				R.array.renova_dados_valores_descricao);
+
+		if (prefs.contains("renova_dados_tipo")) {
+			seletorTipo.setSummary(valores[new Integer(prefs.getString(
+					"renova_dados_tipo", "0"))]);
+		} else {
+			seletorTipo
+					.setSummary(R.string.preferencias_descricao_renova_dados_valor);
+		}
+
+	}
+
+	private void atualizaProximaRenovacao(SharedPreferences prefs) {
+		EditTextPreference campoRenovacao = (EditTextPreference) findPreference("renova_dados_agendado");
+
+		String valor = null;
+		if (prefs.contains("renova_dados_agendado")) {
+			Date dataHora = new Date(prefs.getLong("renova_dados_agendado", 0L));
+			valor = String.format("%s, %s", DateFormat.getTimeFormat(this)
+					.format(dataHora),
+					DateFormat.getDateFormat(this).format(dataHora));
+		} else {
+			valor = getResources().getString(
+					R.string.preferencias_descricao_dados_proximo);
+		}
+
+		campoRenovacao.setSummary(valor);
+
+	}
+
+	private void atualizaValidade(SharedPreferences prefs) {
+		EditTextPreference campoValidade = (EditTextPreference) findPreference("renova_dados_validade");
+
+		String valor = null;
+		if (prefs.contains("renova_dados_validade")) {
+			Date dataHora = new Date(prefs.getLong("renova_dados_validade", 0L));
+			valor = String.format("%s, %s", DateFormat.getTimeFormat(this)
+					.format(dataHora),
+					DateFormat.getDateFormat(this).format(dataHora));
+		} else {
+			valor = getResources().getString(
+					R.string.preferencias_descricao_dados_validade);
+		}
+
+		campoValidade.setSummary(valor);
 	}
 
 }

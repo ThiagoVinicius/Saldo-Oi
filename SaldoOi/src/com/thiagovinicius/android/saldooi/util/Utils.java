@@ -18,6 +18,8 @@
 
 package com.thiagovinicius.android.saldooi.util;
 
+import java.util.Calendar;
+
 import android.telephony.SmsManager;
 
 public class Utils {
@@ -27,6 +29,15 @@ public class Utils {
 	public static void enviaMensagem(String destinatario, String texto) {
 		SmsManager servicoSms = SmsManager.getDefault();
 		servicoSms.sendTextMessage(destinatario, null, texto, null, null);
+	}
+
+	public static Calendar meiaNoite(Calendar hoje) {
+		hoje = (Calendar) hoje.clone();
+		hoje.set(Calendar.HOUR_OF_DAY, 0);
+		hoje.set(Calendar.MINUTE, 0);
+		hoje.set(Calendar.SECOND, 0);
+		hoje.set(Calendar.MILLISECOND, 0);
+		return hoje;
 	}
 
 }

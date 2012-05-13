@@ -8,13 +8,8 @@
     </string-array>
     <string-array name="renova_dados_valores_descricao">
         <item>5MB (1 dia)</item>
-
-        <!--
-        TODO: Não suportados ainda pela aplicação
-        <item >20MB (1 semana) </item>
-        <item >50MB (1 mes)</item>
-        -->
-
+        <item>20MB (1 semana)</item>
+        <item>50MB (1 mes)</item>
     </string-array>
     <string-array name="renova_dados_destinatarios">
         <item>3505</item>
@@ -34,8 +29,13 @@
     </array>
 
     <string name="preferencias_titulo_renova_dados">Plano de dados: Renovação automática</string>
-    <string name="preferencias_titulo_renova_dados_habilitado">Habilitar renovação automática</string>
-    <string name="preferencias_titulo_renova_dados_valor">Valor</string>
+    <string name="preferencias_titulo_dados_validade">Validade</string>
+    <string name="preferencias_descricao_dados_validade">Desconhecida</string>
+    <string name="preferencias_titulo_dados_proximo">Próxima renovação</string>
+    <string name="preferencias_descricao_dados_proximo">Não programada</string>
+    <string name="preferencias_titulo_renova_dados_habilitado">Renovar ao vencer</string>
+    <string name="preferencias_titulo_renova_dados_valor">Usando plano:</string>
+    <string name="preferencias_descricao_renova_dados_valor">Selecione</string>
 
     <string-array name="preferencias_renova_dados_valores">
         <item>0</item>

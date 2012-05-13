@@ -3,6 +3,10 @@ package com.thiagovinicius.android.saldooi.agendado;
 import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME;
 import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.EXTRA_HABILITAR;
 import static com.thiagovinicius.android.saldooi.util.Utils.enviaMensagem;
+import static com.thiagovinicius.android.saldooi.util.Utils.meiaNoite;
+
+import java.sql.SQLException;
+import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +17,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.thiagovinicius.android.saldooi.R;
+import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
+import com.thiagovinicius.android.saldooi.db.PacoteDados;
+import com.thiagovinicius.android.saldooi.db.PacoteDados.OrigemDados;
 
 public class RenovaPlanoDados extends BroadcastReceiver {
 
@@ -40,7 +48,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	private int getIdPlano(Context ctx) {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-		String result = pref.getString("renova_dados_tipo", "0");
+		String result = pref.getString("renova_dados_tipo", "-1");
 		return new Integer(result);
 	}
 
@@ -56,13 +64,65 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 		return destinatarios[idPlano];
 	}
 
+	private int getValidadeDias(Context ctx, int idPlano) {
+		int validades[] = ctx.getResources().getIntArray(
+				R.array.renova_dados_validade_dias);
+		return validades[idPlano];
+	}
+
 	private void renovaPlano(Context ctx) {
 		int idPlano = getIdPlano(ctx);
+		if (idPlano == -1) {
+			logger.info("Plano não selecionado. Não renovarei.");
+			return;
+		}
 		String destinatario = getDestinatario(ctx, idPlano);
 		String textoMensagem = getTextoPlano(ctx, idPlano);
 		logger.info("Enviando mensagem. Destinatário: {}, Texto: {}",
 				destinatario, textoMensagem);
 		enviaMensagem(destinatario, textoMensagem);
+		atualizaValidade(ctx, idPlano);
+		programaProximaRenovacao(ctx);
+	}
+
+	private void atualizaValidade(Context ctx, int idPlano) {
+		AuxiliarOrm db = OpenHelperManager.getHelper(ctx, AuxiliarOrm.class);
+
+		try {
+			Calendar hoje = Calendar.getInstance();
+			Calendar validade = meiaNoite(hoje);
+			validade.roll(Calendar.DAY_OF_YEAR, getValidadeDias(ctx, idPlano));
+
+			PacoteDados novaValidade = new PacoteDados();
+			novaValidade.dataInformacao = hoje.getTime();
+			novaValidade.origem = OrigemDados.ESTIMATIVA;
+			novaValidade.saldoBytes = 0;
+			novaValidade.validade = validade.getTime();
+
+			db.pacoteDados().create(novaValidade);
+
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(ctx);
+			long validadeAntiga = prefs.getLong("renova_dados_validade", 0L);
+			if (validade.getTimeInMillis() > validadeAntiga) {
+				SharedPreferences.Editor ed = prefs.edit();
+				ed.putLong("renova_dados_validade", validade.getTimeInMillis());
+				ed.commit();
+			}
+
+		} catch (SQLException ex) {
+			logger.error("", ex);
+		} finally {
+			OpenHelperManager.releaseHelper();
+		}
+
+	}
+
+	private void programaProximaRenovacao(Context ctx) {
+		Intent i = new Intent();
+		i.setAction(ACTION_ALTERA_ALARME);
+		i.putExtra(EXTRA_HABILITAR, true);
+		ctx.sendBroadcast(i);
 	}
 
 	@Override
