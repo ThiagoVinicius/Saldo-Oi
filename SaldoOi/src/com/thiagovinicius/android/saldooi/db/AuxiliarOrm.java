@@ -38,7 +38,7 @@ import com.j256.ormlite.table.TableUtils;
 public class AuxiliarOrm extends OrmLiteSqliteOpenHelper {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(AuxiliarOrm.class);
+			.getLogger(AuxiliarOrm.class.getSimpleName());
 
 	private static final String NOME_BANCO = "saldo-oi.db";
 	private static final int VERSAO_BANCO = 1;

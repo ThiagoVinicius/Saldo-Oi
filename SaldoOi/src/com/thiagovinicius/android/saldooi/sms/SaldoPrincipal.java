@@ -31,7 +31,7 @@ public class SaldoPrincipal extends LeitorDados {
 	private static final Pattern padrao = Pattern
 			.compile("\\QOi, seu saldo e R$ \\E(\\d+[.]\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
 	private static final Logger logger = LoggerFactory
-			.getLogger(SaldoPrincipal.class);
+			.getLogger(SaldoPrincipal.class.getSimpleName());
 
 	@Override
 	public void processaMensagem(SmsMessage mensagem) {
