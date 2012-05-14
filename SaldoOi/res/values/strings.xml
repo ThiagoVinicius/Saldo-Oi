@@ -43,6 +43,6 @@
         <item>2</item>
     </string-array>
 
-    <string name="view_principal_preferencias">Preferências</string>
+    <string name="view_plano_dados">Plano de dados</string>
 
 </resources>

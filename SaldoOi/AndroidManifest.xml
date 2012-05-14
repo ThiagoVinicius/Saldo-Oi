@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.Preferencias" />
+        <activity android:name=".views.PlanoDados" />
 
         <receiver android:name=".sms.FiltroRemetente" android:exported="true" >
             <intent-filter>

@@ -22,7 +22,7 @@ import com.thiagovinicius.android.saldooi.R;
 import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
 import com.thiagovinicius.android.saldooi.db.PacoteDados;
 import com.thiagovinicius.android.saldooi.db.PacoteDados.OrigemDados;
-import com.thiagovinicius.android.saldooi.views.Preferencias;
+import com.thiagovinicius.android.saldooi.views.PlanoDados;
 
 public class RenovaPlanoDados extends BroadcastReceiver {
 
@@ -37,7 +37,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	private boolean agendamentoHabilitado(Context ctx) {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-		return pref.getBoolean(Preferencias.CHAVE_DADOS_HABILITADO, false);
+		return pref.getBoolean(PlanoDados.CHAVE_HABILITADO, false);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	private int getIdPlano(Context ctx) {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-		String result = pref.getString(Preferencias.CHAVE_DADOS_PLANO, "-1");
+		String result = pref.getString(PlanoDados.CHAVE_PLANO, "-1");
 		return new Integer(result);
 	}
 
@@ -104,11 +104,10 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 
 			SharedPreferences prefs = PreferenceManager
 					.getDefaultSharedPreferences(ctx);
-			long validadeAntiga = prefs.getLong(
-					Preferencias.CHAVE_DADOS_VALIDADE, 0L);
+			long validadeAntiga = prefs.getLong(PlanoDados.CHAVE_VALIDADE, 0L);
 			if (validade.getTimeInMillis() > validadeAntiga) {
 				SharedPreferences.Editor ed = prefs.edit();
-				ed.putLong(Preferencias.CHAVE_DADOS_VALIDADE,
+				ed.putLong(PlanoDados.CHAVE_VALIDADE,
 						validade.getTimeInMillis());
 				ed.commit();
 			}

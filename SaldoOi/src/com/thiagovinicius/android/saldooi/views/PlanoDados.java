@@ -34,19 +34,19 @@ import android.text.format.DateFormat;
 
 import com.thiagovinicius.android.saldooi.R;
 
-public class Preferencias extends PreferenceActivity implements
+public class PlanoDados extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
-	public static final String CHAVE_DADOS_AGENDADO = "renova_dados_agendado";
-	public static final String CHAVE_DADOS_HABILITADO = "renova_dados_habilitado";
-	public static final String CHAVE_DADOS_PLANO = "renova_dados_tipo";
-	public static final String CHAVE_DADOS_VALIDADE = "renova_dados_validade";
+	public static final String CHAVE_AGENDADO = "renova_dados_agendado";
+	public static final String CHAVE_HABILITADO = "renova_dados_habilitado";
+	public static final String CHAVE_PLANO = "renova_dados_tipo";
+	public static final String CHAVE_VALIDADE = "renova_dados_validade";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		addPreferencesFromResource(R.xml.preferencias);
+		addPreferencesFromResource(R.xml.plano_dados);
 	}
 
 	@Override
@@ -70,36 +70,35 @@ public class Preferencias extends PreferenceActivity implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String chave) {
-		if (CHAVE_DADOS_PLANO.equals(chave)
-				|| CHAVE_DADOS_HABILITADO.equals(chave)) {
+		if (CHAVE_PLANO.equals(chave) || CHAVE_HABILITADO.equals(chave)) {
 
 			Intent i = new Intent();
 			i.setAction(ACTION_ALTERA_ALARME);
 			i.putExtra(EXTRA_HABILITAR,
-					prefs.getBoolean(CHAVE_DADOS_HABILITADO, false));
+					prefs.getBoolean(CHAVE_HABILITADO, false));
 			sendBroadcast(i);
 
 		}
-		if (CHAVE_DADOS_PLANO.equals(chave)) {
+		if (CHAVE_PLANO.equals(chave)) {
 			atualizaTipoRenovacao(prefs);
 		}
-		if (CHAVE_DADOS_AGENDADO.equals(chave)) {
+		if (CHAVE_AGENDADO.equals(chave)) {
 			atualizaProximaRenovacao(prefs);
 		}
-		if (CHAVE_DADOS_VALIDADE.equals(chave)) {
+		if (CHAVE_VALIDADE.equals(chave)) {
 			atualizaValidade(prefs);
 		}
 	}
 
 	private void atualizaTipoRenovacao(SharedPreferences prefs) {
-		ListPreference seletorTipo = (ListPreference) findPreference(CHAVE_DADOS_PLANO);
+		ListPreference seletorTipo = (ListPreference) findPreference(CHAVE_PLANO);
 
 		String valores[] = getResources().getStringArray(
 				R.array.renova_dados_valores_descricao);
 
-		if (prefs.contains(CHAVE_DADOS_PLANO)) {
+		if (prefs.contains(CHAVE_PLANO)) {
 			seletorTipo.setSummary(valores[new Integer(prefs.getString(
-					CHAVE_DADOS_PLANO, "0"))]);
+					CHAVE_PLANO, "0"))]);
 		} else {
 			seletorTipo
 					.setSummary(R.string.preferencias_descricao_renova_dados_valor);
@@ -108,11 +107,11 @@ public class Preferencias extends PreferenceActivity implements
 	}
 
 	private void atualizaProximaRenovacao(SharedPreferences prefs) {
-		EditTextPreference campoRenovacao = (EditTextPreference) findPreference(CHAVE_DADOS_AGENDADO);
+		EditTextPreference campoRenovacao = (EditTextPreference) findPreference(CHAVE_AGENDADO);
 
 		String valor = null;
-		if (prefs.contains(CHAVE_DADOS_AGENDADO)) {
-			Date dataHora = new Date(prefs.getLong(CHAVE_DADOS_AGENDADO, 0L));
+		if (prefs.contains(CHAVE_AGENDADO)) {
+			Date dataHora = new Date(prefs.getLong(CHAVE_AGENDADO, 0L));
 			valor = String.format("%s, %s", DateFormat.getTimeFormat(this)
 					.format(dataHora),
 					DateFormat.getDateFormat(this).format(dataHora));
@@ -126,11 +125,11 @@ public class Preferencias extends PreferenceActivity implements
 	}
 
 	private void atualizaValidade(SharedPreferences prefs) {
-		EditTextPreference campoValidade = (EditTextPreference) findPreference(CHAVE_DADOS_VALIDADE);
+		EditTextPreference campoValidade = (EditTextPreference) findPreference(CHAVE_VALIDADE);
 
 		String valor = null;
-		if (prefs.contains(CHAVE_DADOS_VALIDADE)) {
-			Date dataHora = new Date(prefs.getLong(CHAVE_DADOS_VALIDADE, 0L));
+		if (prefs.contains(CHAVE_VALIDADE)) {
+			Date dataHora = new Date(prefs.getLong(CHAVE_VALIDADE, 0L));
 			valor = String.format("%s, %s", DateFormat.getTimeFormat(this)
 					.format(dataHora),
 					DateFormat.getDateFormat(this).format(dataHora));

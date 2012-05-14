@@ -39,8 +39,9 @@ public class Principal extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		Map<String, Object> entries = new HashMap<String, Object>();
-		entries.put("intent", new Intent(this, Preferencias.class));
-		entries.put("titulo", "Preferências");
+		entries.put("intent", new Intent(this, PlanoDados.class));
+		entries.put("titulo",
+				getResources().getString(R.string.view_plano_dados));
 
 		List<Map<String, Object>> entriesList = new ArrayList<Map<String, Object>>();
 		entriesList.add(entries);
