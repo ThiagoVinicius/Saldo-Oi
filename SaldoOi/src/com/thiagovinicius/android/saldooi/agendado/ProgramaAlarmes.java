@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,33 +39,25 @@ import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
 import com.thiagovinicius.android.saldooi.db.PacoteDados;
 import com.thiagovinicius.android.saldooi.views.PlanoDados;
 
-public class ProgramaAlarmes extends BroadcastReceiver {
+public class ProgramaAlarmes {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ProgramaAlarmes.class.getSimpleName());
 
-	public static final String ACTION_ALTERA_ALARME = ProgramaAlarmes.class
-			.getCanonicalName() + ".ACTION_ALTERA_ALARME";
-	public static final String EXTRA_HABILITAR = ProgramaAlarmes.class
-			.getCanonicalName() + ".EXTRA_HABILITAR";
+	public static void alteraAlarme(Context ctx, boolean habilitar) {
+		AlarmManager am = (AlarmManager) ctx
+				.getSystemService(Context.ALARM_SERVICE);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
 
-	@Override
-	public void onReceive(Context ctx, Intent intent) {
-		if (ACTION_ALTERA_ALARME.equals(intent.getAction())) {
-			AlarmManager am = (AlarmManager) ctx
-					.getSystemService(Context.ALARM_SERVICE);
-			SharedPreferences prefs = PreferenceManager
-					.getDefaultSharedPreferences(ctx);
-
-			if (intent.getBooleanExtra(EXTRA_HABILITAR, true)) {
-				habilitaRenovacao(ctx, prefs, am);
-			} else {
-				desabilitaRenovacao(ctx, prefs, am);
-			}
+		if (habilitar) {
+			habilitaRenovacao(ctx, prefs, am);
+		} else {
+			desabilitaRenovacao(ctx, prefs, am);
 		}
 	}
 
-	private Calendar dataValidade(Context ctx) throws SQLException {
+	private static Calendar dataValidade(Context ctx) throws SQLException {
 		Calendar dataAlvo = null;
 		AuxiliarOrm db = OpenHelperManager.getHelper(ctx, AuxiliarOrm.class);
 
@@ -84,7 +75,7 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 
 	}
 
-	private Calendar calculaHoraRenovacao(Calendar validade) {
+	private static Calendar calculaHoraRenovacao(Calendar validade) {
 
 		Calendar horaAlvo;
 		Calendar hoje = Calendar.getInstance();
@@ -110,7 +101,7 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 		return horaAlvo;
 	}
 
-	private void habilitaRenovacao(Context ctx, SharedPreferences prefs,
+	private static void habilitaRenovacao(Context ctx, SharedPreferences prefs,
 			AlarmManager am) {
 		logger.info("Programando renovação de saldo.");
 		Calendar validade = null;
@@ -140,8 +131,8 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 
 	}
 
-	private void desabilitaRenovacao(Context ctx, SharedPreferences prefs,
-			AlarmManager am) {
+	private static void desabilitaRenovacao(Context ctx,
+			SharedPreferences prefs, AlarmManager am) {
 		logger.info("Desprogramando renovação de saldo.");
 		am.cancel(getIntentRenovacao(ctx));
 
@@ -150,7 +141,7 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 		ed.commit();
 	}
 
-	private PendingIntent getIntentRenovacao(Context ctx) {
+	private static PendingIntent getIntentRenovacao(Context ctx) {
 		Intent i = new Intent();
 		i.setAction(ACTION_RENOVAR_PLANO_DADOS);
 		i.putExtra(EXTRA_AGENDADO, true);

@@ -34,11 +34,6 @@
                 <action android:name="com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".agendado.ProgramaAlarmes" android:exported="false" >
-            <intent-filter>
-                <action android:name="com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME" />
-            </intent-filter>
-        </receiver>
         <receiver android:name=".agendado.RenovaPlanoDados" android:exported="false" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados.ACTION_RENOVAR_PLANO_DADOS" />

@@ -18,12 +18,8 @@
 
 package com.thiagovinicius.android.saldooi.views;
 
-import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME;
-import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.EXTRA_HABILITAR;
-
 import java.util.Date;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -33,6 +29,7 @@ import android.preference.PreferenceActivity;
 import android.text.format.DateFormat;
 
 import com.thiagovinicius.android.saldooi.R;
+import com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes;
 
 public class PlanoDados extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
@@ -72,11 +69,8 @@ public class PlanoDados extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String chave) {
 		if (CHAVE_PLANO.equals(chave) || CHAVE_HABILITADO.equals(chave)) {
 
-			Intent i = new Intent();
-			i.setAction(ACTION_ALTERA_ALARME);
-			i.putExtra(EXTRA_HABILITAR,
-					prefs.getBoolean(CHAVE_HABILITADO, false));
-			sendBroadcast(i);
+			ProgramaAlarmes.alteraAlarme(this,
+					prefs.getBoolean(PlanoDados.CHAVE_HABILITADO, false));
 
 		}
 		if (CHAVE_PLANO.equals(chave)) {

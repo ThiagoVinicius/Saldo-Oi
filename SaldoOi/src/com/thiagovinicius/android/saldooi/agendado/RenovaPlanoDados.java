@@ -1,7 +1,5 @@
 package com.thiagovinicius.android.saldooi.agendado;
 
-import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME;
-import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.EXTRA_HABILITAR;
 import static com.thiagovinicius.android.saldooi.util.Utils.enviaMensagem;
 import static com.thiagovinicius.android.saldooi.util.Utils.meiaNoite;
 
@@ -121,10 +119,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	}
 
 	private void programaProximaRenovacao(Context ctx) {
-		Intent i = new Intent();
-		i.setAction(ACTION_ALTERA_ALARME);
-		i.putExtra(EXTRA_HABILITAR, true);
-		ctx.sendBroadcast(i);
+		ProgramaAlarmes.alteraAlarme(ctx, true);
 	}
 
 	@Override
@@ -140,10 +135,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 				logger.info("Renovação disparada por alarme.");
 			} else {
 				logger.info("Renovação disparada por alarme, porém desabilitada.");
-				Intent desabilitarAlarme = new Intent();
-				desabilitarAlarme.setAction(ACTION_ALTERA_ALARME);
-				desabilitarAlarme.putExtra(EXTRA_HABILITAR, false);
-				ctx.sendBroadcast(desabilitarAlarme);
+				ProgramaAlarmes.alteraAlarme(ctx, false);
 				return;
 			}
 
