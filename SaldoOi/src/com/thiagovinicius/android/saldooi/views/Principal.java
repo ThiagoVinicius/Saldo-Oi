@@ -47,8 +47,8 @@ public class Principal extends ListActivity {
 		entriesList.add(entries);
 
 		setListAdapter(new SimpleAdapter(this, entriesList,
-				R.layout.item_lista, new String[] { "titulo" },
-				new int[] { R.id.layout_texto_1 }));
+				android.R.layout.simple_list_item_1, new String[] { "titulo" },
+				new int[] { android.R.id.text1 }));
 
 	}
 
