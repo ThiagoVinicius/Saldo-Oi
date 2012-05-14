@@ -38,6 +38,7 @@ import android.preference.PreferenceManager;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
 import com.thiagovinicius.android.saldooi.db.PacoteDados;
+import com.thiagovinicius.android.saldooi.views.Preferencias;
 
 public class ProgramaAlarmes extends BroadcastReceiver {
 
@@ -133,7 +134,8 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 
 		if (horaAlvo.after(Calendar.getInstance())) {
 			SharedPreferences.Editor ed = prefs.edit();
-			ed.putLong("renova_dados_agendado", horaAlvo.getTimeInMillis());
+			ed.putLong(Preferencias.CHAVE_DADOS_AGENDADO,
+					horaAlvo.getTimeInMillis());
 			ed.commit();
 		}
 
@@ -145,7 +147,7 @@ public class ProgramaAlarmes extends BroadcastReceiver {
 		am.cancel(getIntentRenovacao(ctx));
 
 		SharedPreferences.Editor ed = prefs.edit();
-		ed.remove("renova_dados_agendado");
+		ed.remove(Preferencias.CHAVE_DADOS_AGENDADO);
 		ed.commit();
 	}
 

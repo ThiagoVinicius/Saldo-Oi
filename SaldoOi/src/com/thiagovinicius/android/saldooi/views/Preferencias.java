@@ -37,6 +37,11 @@ import com.thiagovinicius.android.saldooi.R;
 public class Preferencias extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
+	public static final String CHAVE_DADOS_AGENDADO = "renova_dados_agendado";
+	public static final String CHAVE_DADOS_HABILITADO = "renova_dados_habilitado";
+	public static final String CHAVE_DADOS_PLANO = "renova_dados_tipo";
+	public static final String CHAVE_DADOS_VALIDADE = "renova_dados_validade";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,36 +70,36 @@ public class Preferencias extends PreferenceActivity implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String chave) {
-		if ("renova_dados_tipo".equals(chave)
-				|| "renova_dados_habilitado".equals(chave)) {
+		if (CHAVE_DADOS_PLANO.equals(chave)
+				|| CHAVE_DADOS_HABILITADO.equals(chave)) {
 
 			Intent i = new Intent();
 			i.setAction(ACTION_ALTERA_ALARME);
 			i.putExtra(EXTRA_HABILITAR,
-					prefs.getBoolean("renova_dados_habilitado", false));
+					prefs.getBoolean(CHAVE_DADOS_HABILITADO, false));
 			sendBroadcast(i);
 
 		}
-		if ("renova_dados_tipo".equals(chave)) {
+		if (CHAVE_DADOS_PLANO.equals(chave)) {
 			atualizaTipoRenovacao(prefs);
 		}
-		if ("renova_dados_agendado".equals(chave)) {
+		if (CHAVE_DADOS_AGENDADO.equals(chave)) {
 			atualizaProximaRenovacao(prefs);
 		}
-		if ("renova_dados_validade".equals(chave)) {
+		if (CHAVE_DADOS_VALIDADE.equals(chave)) {
 			atualizaValidade(prefs);
 		}
 	}
 
 	private void atualizaTipoRenovacao(SharedPreferences prefs) {
-		ListPreference seletorTipo = (ListPreference) findPreference("renova_dados_tipo");
+		ListPreference seletorTipo = (ListPreference) findPreference(CHAVE_DADOS_PLANO);
 
 		String valores[] = getResources().getStringArray(
 				R.array.renova_dados_valores_descricao);
 
-		if (prefs.contains("renova_dados_tipo")) {
+		if (prefs.contains(CHAVE_DADOS_PLANO)) {
 			seletorTipo.setSummary(valores[new Integer(prefs.getString(
-					"renova_dados_tipo", "0"))]);
+					CHAVE_DADOS_PLANO, "0"))]);
 		} else {
 			seletorTipo
 					.setSummary(R.string.preferencias_descricao_renova_dados_valor);
@@ -103,11 +108,11 @@ public class Preferencias extends PreferenceActivity implements
 	}
 
 	private void atualizaProximaRenovacao(SharedPreferences prefs) {
-		EditTextPreference campoRenovacao = (EditTextPreference) findPreference("renova_dados_agendado");
+		EditTextPreference campoRenovacao = (EditTextPreference) findPreference(CHAVE_DADOS_AGENDADO);
 
 		String valor = null;
-		if (prefs.contains("renova_dados_agendado")) {
-			Date dataHora = new Date(prefs.getLong("renova_dados_agendado", 0L));
+		if (prefs.contains(CHAVE_DADOS_AGENDADO)) {
+			Date dataHora = new Date(prefs.getLong(CHAVE_DADOS_AGENDADO, 0L));
 			valor = String.format("%s, %s", DateFormat.getTimeFormat(this)
 					.format(dataHora),
 					DateFormat.getDateFormat(this).format(dataHora));
@@ -121,11 +126,11 @@ public class Preferencias extends PreferenceActivity implements
 	}
 
 	private void atualizaValidade(SharedPreferences prefs) {
-		EditTextPreference campoValidade = (EditTextPreference) findPreference("renova_dados_validade");
+		EditTextPreference campoValidade = (EditTextPreference) findPreference(CHAVE_DADOS_VALIDADE);
 
 		String valor = null;
-		if (prefs.contains("renova_dados_validade")) {
-			Date dataHora = new Date(prefs.getLong("renova_dados_validade", 0L));
+		if (prefs.contains(CHAVE_DADOS_VALIDADE)) {
+			Date dataHora = new Date(prefs.getLong(CHAVE_DADOS_VALIDADE, 0L));
 			valor = String.format("%s, %s", DateFormat.getTimeFormat(this)
 					.format(dataHora),
 					DateFormat.getDateFormat(this).format(dataHora));

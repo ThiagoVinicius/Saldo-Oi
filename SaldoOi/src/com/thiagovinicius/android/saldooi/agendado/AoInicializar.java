@@ -20,6 +20,9 @@ package com.thiagovinicius.android.saldooi.agendado;
 
 import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.ACTION_ALTERA_ALARME;
 import static com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes.EXTRA_HABILITAR;
+
+import com.thiagovinicius.android.saldooi.views.Preferencias;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,8 +39,8 @@ public class AoInicializar extends BroadcastReceiver {
 
 			Intent i = new Intent();
 			i.setAction(ACTION_ALTERA_ALARME);
-			i.putExtra(EXTRA_HABILITAR,
-					prefs.getBoolean("renova_dados_habilitado", false));
+			i.putExtra(EXTRA_HABILITAR, prefs.getBoolean(
+					Preferencias.CHAVE_DADOS_HABILITADO, false));
 			ctx.sendBroadcast(i);
 		}
 	}
