@@ -3,8 +3,8 @@
 
     <string name="app_name">Saldo Oi</string>
 
-    <string-array name="remetentes_conhecidos">
-        <item>+550310006092</item>
+    <string-array name="origem_prefixos_conhecidos">
+        <item>+55031000</item>
     </string-array>
     <string-array name="renova_dados_valores_descricao">
         <item>5MB (1 dia)</item>

@@ -19,11 +19,6 @@
 package com.thiagovinicius.android.saldooi.sms;
 
 import static com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,8 +35,8 @@ public class FiltroRemetente extends BroadcastReceiver {
 		if (extras == null)
 			return;
 
-		Set<String> remetentes = new HashSet<String>(Arrays.asList(ctx
-				.getResources().getStringArray(R.array.remetentes_conhecidos)));
+		String remetentes[] = ctx.getResources().getStringArray(
+				R.array.origem_prefixos_conhecidos);
 
 		Object[] pdus = (Object[]) extras.get("pdus");
 
@@ -50,8 +45,16 @@ public class FiltroRemetente extends BroadcastReceiver {
 			byte mensagemRaw[] = (byte[]) pdus[i];
 			SmsMessage message = SmsMessage.createFromPdu(mensagemRaw);
 			String fromAddress = message.getOriginatingAddress();
+			boolean ok = false;
 
-			if (remetentes.contains(fromAddress)) {
+			for (String prefixo : remetentes) {
+				if (fromAddress.startsWith(prefixo)) {
+					ok = true;
+					break;
+				}
+			}
+
+			if (ok) {
 				Intent di = new Intent(ACTION_PROCESSAR_DADOS);
 				di.putExtra("mensagem", mensagemRaw);
 				ctx.sendBroadcast(di);
@@ -60,5 +63,4 @@ public class FiltroRemetente extends BroadcastReceiver {
 		}
 
 	}
-
 }
