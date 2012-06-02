@@ -43,12 +43,12 @@ public class FiltroRemetente extends BroadcastReceiver {
 		for (int i = 0; i < pdus.length; i++) {
 
 			byte mensagemRaw[] = (byte[]) pdus[i];
-			SmsMessage message = SmsMessage.createFromPdu(mensagemRaw);
-			String fromAddress = message.getOriginatingAddress();
+			SmsMessage mensagem = SmsMessage.createFromPdu(mensagemRaw);
+			String origem = mensagem.getOriginatingAddress();
 			boolean ok = false;
 
 			for (String prefixo : remetentes) {
-				if (fromAddress.startsWith(prefixo)) {
+				if (origem.startsWith(prefixo)) {
 					ok = true;
 					break;
 				}

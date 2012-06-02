@@ -42,7 +42,7 @@ public class SaldoPrincipal extends LeitorDados {
 
 		logger.debug("Recebida mensagem: \"{}\"", texto);
 		if (comparador.matches()) {
-			logger.debug("Ladies and gentleman, we got a match! ({} groups)",
+			logger.debug("Mensagem de saldo detectada; ({} grupos)",
 					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
 				saldo = (int) (new Double(comparador.group(1)) / 100d);
