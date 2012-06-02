@@ -45,7 +45,7 @@ public class SaldoPrincipal extends LeitorDados {
 			logger.debug("Mensagem de saldo detectada; ({} grupos)",
 					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
-				saldo = (int) (new Double(comparador.group(1)) / 100d);
+				saldo = (int) (new Double(comparador.group(1)) * 100d);
 				data = comparador.group(2);
 				logger.info("Saldo: {} => {}", comparador.group(1), saldo);
 				logger.info("Validade: {} => {}", comparador.group(2), data);
