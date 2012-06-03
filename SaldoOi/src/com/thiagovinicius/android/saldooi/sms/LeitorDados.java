@@ -27,17 +27,17 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
-import com.thiagovinicius.android.saldooi.db.PacoteDados;
-import com.thiagovinicius.android.saldooi.db.PacoteDados.OrigemDados;
-import com.thiagovinicius.android.saldooi.util.Utils;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
+import com.thiagovinicius.android.saldooi.db.PacoteDados;
+import com.thiagovinicius.android.saldooi.db.PacoteDados.OrigemDados;
+import com.thiagovinicius.android.saldooi.util.Utils;
 
 public class LeitorDados extends BroadcastReceiver {
 
