@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/preferencias_titulo_renova_dados" >
-        <EditTextPreference
+        <Preference
             android:key="renova_dados_validade"
             android:persistent="false"
             android:selectable="false"
             android:summary="@string/preferencias_descricao_dados_validade"
             android:title="@string/preferencias_titulo_dados_validade" />
-        <EditTextPreference
+        <Preference
             android:key="renova_dados_agendado"
             android:persistent="false"
             android:selectable="false"
