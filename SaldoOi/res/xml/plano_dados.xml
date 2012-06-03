@@ -15,6 +15,11 @@
             android:summary="@string/preferencias_descricao_dados_proximo"
             android:title="@string/preferencias_titulo_dados_proximo" />
 
+        <Preference
+            android:key="renova_dados_agora"
+            android:persistent="false"
+            android:title="@string/preferencias_titulo_renova_dados_agora" />
+
         <CheckBoxPreference
             android:key="renova_dados_habilitado"
             android:title="@string/preferencias_titulo_renova_dados_habilitado" />

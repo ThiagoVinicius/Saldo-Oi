@@ -32,6 +32,13 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	private static final Logger logger = LoggerFactory
 			.getLogger(RenovaPlanoDados.class.getSimpleName());
 
+	public static void renovaImediatamente(Context ctx) {
+		Intent i = new Intent();
+		i.setAction(ACTION_RENOVAR_PLANO_DADOS);
+		i.putExtra(EXTRA_AGENDADO, false);
+		ctx.sendBroadcast(i);
+	}
+
 	private boolean agendamentoHabilitado(Context ctx) {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
@@ -109,7 +116,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	}
 
 	private void programaProximaRenovacao(Context ctx) {
-		ProgramaAlarmes.alteraAlarme(ctx, true);
+		ProgramaAlarmes.atualizaAlarme(ctx);
 	}
 
 	@Override

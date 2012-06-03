@@ -20,23 +20,29 @@ package com.thiagovinicius.android.saldooi.views;
 
 import java.util.Date;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.text.format.DateFormat;
 
 import com.thiagovinicius.android.saldooi.R;
 import com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes;
+import com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados;
 
 public class PlanoDados extends PreferenceActivity implements
-		OnSharedPreferenceChangeListener {
+		OnSharedPreferenceChangeListener, OnPreferenceClickListener {
 
 	public static final String CHAVE_AGENDADO = "renova_dados_agendado";
 	public static final String CHAVE_HABILITADO = "renova_dados_habilitado";
 	public static final String CHAVE_PLANO = "renova_dados_tipo";
 	public static final String CHAVE_VALIDADE = "renova_dados_validade";
+	public static final String CHAVE_RENOVAR = "renova_dados_agora";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,7 @@ public class PlanoDados extends PreferenceActivity implements
 
 		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
 
+		findPreference(CHAVE_RENOVAR).setOnPreferenceClickListener(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		atualizaTipoRenovacao(prefs);
 		atualizaProximaRenovacao(prefs);
@@ -62,6 +69,38 @@ public class PlanoDados extends PreferenceActivity implements
 		super.onPause();
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
+		findPreference(CHAVE_RENOVAR).setOnPreferenceClickListener(null);
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		if (CHAVE_RENOVAR.equals(preference.getKey())) {
+
+			final Context self = this;
+
+			AlertDialog.Builder confirmaRenovacao = new AlertDialog.Builder(
+					this);
+			confirmaRenovacao
+					.setMessage(R.string.mensagem_confirmacao_renova_dados_agora);
+
+			confirmaRenovacao.setPositiveButton(android.R.string.yes,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							RenovaPlanoDados.renovaImediatamente(self);
+						}
+					});
+
+			confirmaRenovacao.setNegativeButton(android.R.string.no, null);
+
+			confirmaRenovacao.setTitle(android.R.string.dialog_alert_title);
+			confirmaRenovacao.setIcon(android.R.drawable.ic_dialog_alert);
+
+			AlertDialog alerta = confirmaRenovacao.create();
+			alerta.show();
+
+		}
+		return false;
 	}
 
 	@Override

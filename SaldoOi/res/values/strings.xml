@@ -33,6 +33,8 @@
     <string name="preferencias_descricao_dados_validade">Desconhecida</string>
     <string name="preferencias_titulo_dados_proximo">Próxima renovação</string>
     <string name="preferencias_descricao_dados_proximo">Não programada</string>
+    <string name="preferencias_titulo_renova_dados_agora">Renovar agora!</string>
+
     <string name="preferencias_titulo_renova_dados_habilitado">Renovar ao vencer</string>
     <string name="preferencias_titulo_renova_dados_valor">Usando plano:</string>
     <string name="preferencias_descricao_renova_dados_valor">Selecione</string>
@@ -42,6 +44,8 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string name="mensagem_confirmacao_renova_dados_agora">Renovar plano de dados imediatamente?</string>
 
     <string name="view_plano_dados">Plano de dados</string>
 
