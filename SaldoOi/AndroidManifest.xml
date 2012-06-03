@@ -29,7 +29,7 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".sms.SaldoPrincipal" android:exported="false" >
+        <receiver android:name=".sms.LeitorDados" android:exported="false" >
             <intent-filter>
                 <action android:name="com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS" />
             </intent-filter>

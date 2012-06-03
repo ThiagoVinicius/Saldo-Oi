@@ -18,15 +18,23 @@
 
 package com.thiagovinicius.android.saldooi.sms;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
-public abstract class LeitorDados extends BroadcastReceiver {
+public class LeitorDados extends BroadcastReceiver {
 
 	public static final String ACTION_PROCESSAR_DADOS = "com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS";
+	private static final Logger logger = LoggerFactory
+			.getLogger(LeitorDados.class.getSimpleName());
 
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
@@ -36,13 +44,35 @@ public abstract class LeitorDados extends BroadcastReceiver {
 
 		byte[] mensagemRaw = (byte[]) extras.get("mensagem");
 		SmsMessage mensagem = SmsMessage.createFromPdu(mensagemRaw);
+		String texto = mensagem.getMessageBody();
 
-		if (mensagem.getMessageBody() != null) {
-			processaMensagem(mensagem);
+		if (texto != null) {
+			logger.debug("Recebida mensagem: \"{}\"", texto);
+			processaSaldoPrincipal(texto);
 		}
 
 	}
 
-	public abstract void processaMensagem(SmsMessage mensagem);
+	private void processaSaldoPrincipal(String texto) {
+
+		final Pattern padrao = Pattern
+				.compile("\\QOi, seu saldo e R$ \\E(\\d+[.]\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
+
+		Matcher comparador = padrao.matcher(texto);
+		int saldo;
+		String data;
+
+		if (comparador.matches()) {
+			logger.debug("Mensagem de saldo detectada; ({} grupos)",
+					comparador.groupCount());
+			if (comparador.groupCount() == 2) {
+				saldo = (int) (new Double(comparador.group(1)) * 100d);
+				data = comparador.group(2);
+				logger.info("Saldo: {} => {}", comparador.group(1), saldo);
+				logger.info("Validade: {} => {}", comparador.group(2), data);
+			}
+		}
+
+	}
 
 }
