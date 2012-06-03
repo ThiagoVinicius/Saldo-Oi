@@ -78,7 +78,7 @@ public class PacoteDados {
 				.getDefaultSharedPreferences(ctx);
 		long validadeAntiga = prefs.getLong(PlanoDados.CHAVE_VALIDADE, 0L);
 		if (validade.getTime() > validadeAntiga) {
-			RenovaPlanoDados.atualizaAlarme(ctx);
+			RenovaPlanoDados.agendaRenovacao(ctx);
 			SharedPreferences.Editor ed = prefs.edit();
 			ed.putLong(PlanoDados.CHAVE_VALIDADE, validade.getTime());
 			ed.commit();

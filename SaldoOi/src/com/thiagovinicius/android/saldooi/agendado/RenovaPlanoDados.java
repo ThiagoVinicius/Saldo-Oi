@@ -41,7 +41,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 		ctx.sendBroadcast(i);
 	}
 
-	public static void atualizaAlarme(Context ctx) {
+	public static void agendaRenovacao(Context ctx) {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
 		ProgramaAlarmes.alteraAlarme(
@@ -127,7 +127,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	}
 
 	private void programaProximaRenovacao(Context ctx) {
-		RenovaPlanoDados.atualizaAlarme(ctx);
+		RenovaPlanoDados.agendaRenovacao(ctx);
 	}
 
 	@Override
