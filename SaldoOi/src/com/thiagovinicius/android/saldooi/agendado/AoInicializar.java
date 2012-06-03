@@ -27,7 +27,7 @@ public class AoInicializar extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-			ProgramaAlarmes.atualizaAlarme(ctx);
+			RenovaPlanoDados.atualizaAlarme(ctx);
 		}
 	}
 

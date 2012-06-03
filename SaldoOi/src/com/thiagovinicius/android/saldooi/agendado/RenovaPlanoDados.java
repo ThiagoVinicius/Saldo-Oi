@@ -9,6 +9,8 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +39,15 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 		i.setAction(ACTION_RENOVAR_PLANO_DADOS);
 		i.putExtra(EXTRA_AGENDADO, false);
 		ctx.sendBroadcast(i);
+	}
+
+	public static void atualizaAlarme(Context ctx) {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
+		ProgramaAlarmes.alteraAlarme(
+				ctx,
+				prefs.getBoolean(PlanoDados.CHAVE_HABILITADO, false)
+						&& prefs.contains(PlanoDados.CHAVE_PLANO));
 	}
 
 	private boolean agendamentoHabilitado(Context ctx) {
@@ -116,7 +127,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 	}
 
 	private void programaProximaRenovacao(Context ctx) {
-		ProgramaAlarmes.atualizaAlarme(ctx);
+		RenovaPlanoDados.atualizaAlarme(ctx);
 	}
 
 	@Override
@@ -140,6 +151,122 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 
 		logger.info("Renovando plano de dados.");
 		renovaPlano(ctx);
+
+	}
+
+	private static class ProgramaAlarmes {
+
+		private static final Logger logger = LoggerFactory
+				.getLogger(ProgramaAlarmes.class.getSimpleName());
+
+		public static void alteraAlarme(Context ctx, boolean habilitar) {
+			AlarmManager am = (AlarmManager) ctx
+					.getSystemService(Context.ALARM_SERVICE);
+			SharedPreferences prefs = PreferenceManager
+					.getDefaultSharedPreferences(ctx);
+
+			if (habilitar) {
+				ProgramaAlarmes.habilitaRenovacao(ctx, prefs, am);
+			} else {
+				ProgramaAlarmes.desabilitaRenovacao(ctx, prefs, am);
+			}
+		}
+
+		private static Calendar dataValidade(Context ctx) throws SQLException {
+			Calendar dataAlvo = null;
+			AuxiliarOrm db = OpenHelperManager
+					.getHelper(ctx, AuxiliarOrm.class);
+
+			try {
+				PacoteDados pacote = PacoteDados.encontraMaiorValidade(db
+						.pacoteDados());
+				if (pacote != null) {
+					dataAlvo = Calendar.getInstance();
+					dataAlvo.setTime(pacote.validade);
+				}
+				return dataAlvo;
+			} finally {
+				OpenHelperManager.releaseHelper();
+			}
+
+		}
+
+		private static Calendar calculaHoraRenovacao(Calendar validade) {
+
+			Calendar horaAlvo;
+			Calendar hoje = Calendar.getInstance();
+
+			if (validade.before(hoje)) {
+				horaAlvo = hoje; // O plano esta vencido.
+			} else {
+				horaAlvo = validade;
+			}
+			// Nesse momento, a data está correta, resta apenas ajustar o
+			// horário
+
+			horaAlvo.set(Calendar.HOUR_OF_DAY, 0);
+			horaAlvo.set(Calendar.MINUTE, 10);
+			horaAlvo.set(Calendar.SECOND, 0);
+			horaAlvo.set(Calendar.MILLISECOND, 0);
+
+			if (horaAlvo.before(Calendar.getInstance())) {
+				// Temos que renovar hoje, porém já passamos da hora.
+				// Se não fizermos nada aqui, o alarme será programado no
+				// passado,
+				// e portanto, executado imediatamente.
+			}
+
+			return horaAlvo;
+		}
+
+		private static void habilitaRenovacao(Context ctx,
+				SharedPreferences prefs, AlarmManager am) {
+			logger.info("Programando renovação de saldo.");
+			Calendar validade = null;
+
+			try {
+				validade = dataValidade(ctx);
+			} catch (SQLException ex) {
+				logger.warn("", ex);
+			}
+
+			if (validade == null) {
+				logger.warn("habilitaRenovacao(): validade == null.");
+				validade = Calendar.getInstance();
+			}
+
+			Calendar horaAlvo = calculaHoraRenovacao(validade);
+			logger.info("Renovação de saldo programada para {}", horaAlvo);
+
+			am.set(AlarmManager.RTC, horaAlvo.getTimeInMillis(),
+					getIntentRenovacao(ctx));
+
+			if (horaAlvo.after(Calendar.getInstance())) {
+				SharedPreferences.Editor ed = prefs.edit();
+				ed.putLong(PlanoDados.CHAVE_AGENDADO,
+						horaAlvo.getTimeInMillis());
+				ed.commit();
+			}
+
+		}
+
+		private static void desabilitaRenovacao(Context ctx,
+				SharedPreferences prefs, AlarmManager am) {
+			logger.info("Desprogramando renovação de saldo.");
+			am.cancel(getIntentRenovacao(ctx));
+
+			SharedPreferences.Editor ed = prefs.edit();
+			ed.remove(PlanoDados.CHAVE_AGENDADO);
+			ed.commit();
+		}
+
+		private static PendingIntent getIntentRenovacao(Context ctx) {
+			Intent i = new Intent();
+			i.setAction(ACTION_RENOVAR_PLANO_DADOS);
+			i.putExtra(EXTRA_AGENDADO, true);
+			return PendingIntent.getBroadcast(ctx, 0, i,
+					PendingIntent.FLAG_UPDATE_CURRENT);
+		}
 
 	}
 

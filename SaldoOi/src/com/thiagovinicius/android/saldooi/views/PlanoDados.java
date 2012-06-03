@@ -32,7 +32,6 @@ import android.preference.PreferenceActivity;
 import android.text.format.DateFormat;
 
 import com.thiagovinicius.android.saldooi.R;
-import com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes;
 import com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados;
 
 public class PlanoDados extends PreferenceActivity implements
@@ -106,7 +105,7 @@ public class PlanoDados extends PreferenceActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String chave) {
 		if (CHAVE_PLANO.equals(chave) || CHAVE_HABILITADO.equals(chave)) {
-			ProgramaAlarmes.atualizaAlarme(this);
+			RenovaPlanoDados.atualizaAlarme(this);
 		}
 		if (CHAVE_PLANO.equals(chave)) {
 			atualizaTipoRenovacao(prefs);

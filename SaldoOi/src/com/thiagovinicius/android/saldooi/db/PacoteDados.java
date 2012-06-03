@@ -29,7 +29,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes;
+import com.thiagovinicius.android.saldooi.agendado.RenovaPlanoDados;
 import com.thiagovinicius.android.saldooi.views.PlanoDados;
 
 /**
@@ -78,7 +78,7 @@ public class PacoteDados {
 				.getDefaultSharedPreferences(ctx);
 		long validadeAntiga = prefs.getLong(PlanoDados.CHAVE_VALIDADE, 0L);
 		if (validade.getTime() > validadeAntiga) {
-			ProgramaAlarmes.atualizaAlarme(ctx);
+			RenovaPlanoDados.atualizaAlarme(ctx);
 			SharedPreferences.Editor ed = prefs.edit();
 			ed.putLong(PlanoDados.CHAVE_VALIDADE, validade.getTime());
 			ed.commit();
