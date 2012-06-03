@@ -44,6 +44,13 @@ public class ProgramaAlarmes {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ProgramaAlarmes.class.getSimpleName());
 
+	public static void atualizaAlarme(Context ctx) {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
+		alteraAlarme(ctx, prefs.getBoolean(PlanoDados.CHAVE_HABILITADO, false)
+				&& prefs.contains(PlanoDados.CHAVE_PLANO));
+	}
+
 	public static void alteraAlarme(Context ctx, boolean habilitar) {
 		AlarmManager am = (AlarmManager) ctx
 				.getSystemService(Context.ALARM_SERVICE);

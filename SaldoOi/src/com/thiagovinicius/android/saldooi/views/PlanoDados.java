@@ -68,10 +68,7 @@ public class PlanoDados extends PreferenceActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String chave) {
 		if (CHAVE_PLANO.equals(chave) || CHAVE_HABILITADO.equals(chave)) {
-
-			ProgramaAlarmes.alteraAlarme(this,
-					prefs.getBoolean(PlanoDados.CHAVE_HABILITADO, false));
-
+			ProgramaAlarmes.atualizaAlarme(this);
 		}
 		if (CHAVE_PLANO.equals(chave)) {
 			atualizaTipoRenovacao(prefs);

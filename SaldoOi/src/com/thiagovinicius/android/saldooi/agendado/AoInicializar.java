@@ -21,21 +21,13 @@ package com.thiagovinicius.android.saldooi.agendado;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.thiagovinicius.android.saldooi.views.PlanoDados;
 
 public class AoInicializar extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-			SharedPreferences prefs = PreferenceManager
-					.getDefaultSharedPreferences(ctx);
-
-			ProgramaAlarmes.alteraAlarme(ctx,
-					prefs.getBoolean(PlanoDados.CHAVE_HABILITADO, false));
+			ProgramaAlarmes.atualizaAlarme(ctx);
 		}
 	}
 
