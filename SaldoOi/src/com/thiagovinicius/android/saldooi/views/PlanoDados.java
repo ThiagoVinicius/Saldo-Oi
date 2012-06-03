@@ -23,8 +23,7 @@ import java.util.Date;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.text.format.DateFormat;
 
@@ -82,7 +81,7 @@ public class PlanoDados extends PreferenceActivity implements
 	}
 
 	private void atualizaTipoRenovacao(SharedPreferences prefs) {
-		ListPreference seletorTipo = (ListPreference) findPreference(CHAVE_PLANO);
+		Preference seletorTipo = findPreference(CHAVE_PLANO);
 
 		String valores[] = getResources().getStringArray(
 				R.array.renova_dados_valores_descricao);
@@ -98,7 +97,7 @@ public class PlanoDados extends PreferenceActivity implements
 	}
 
 	private void atualizaProximaRenovacao(SharedPreferences prefs) {
-		EditTextPreference campoRenovacao = (EditTextPreference) findPreference(CHAVE_AGENDADO);
+		Preference campoRenovacao = findPreference(CHAVE_AGENDADO);
 
 		String valor = null;
 		if (prefs.contains(CHAVE_AGENDADO)) {
@@ -116,7 +115,7 @@ public class PlanoDados extends PreferenceActivity implements
 	}
 
 	private void atualizaValidade(SharedPreferences prefs) {
-		EditTextPreference campoValidade = (EditTextPreference) findPreference(CHAVE_VALIDADE);
+		Preference campoValidade = findPreference(CHAVE_VALIDADE);
 
 		String valor = null;
 		if (prefs.contains(CHAVE_VALIDADE)) {
