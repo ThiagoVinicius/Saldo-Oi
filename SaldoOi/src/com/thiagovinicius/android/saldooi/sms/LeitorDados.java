@@ -76,7 +76,7 @@ public class LeitorDados extends BroadcastReceiver {
 	private void processaSaldoPrincipal(String texto) {
 
 		final Pattern padrao = Pattern
-				.compile("\\QOi, seu saldo e R$ \\E(\\d+[.]\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
+				.compile("\\QOi, seu saldo e R$ \\E(\\d+\\.\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
 
 		Matcher comparador = padrao.matcher(texto);
 		int saldo;
