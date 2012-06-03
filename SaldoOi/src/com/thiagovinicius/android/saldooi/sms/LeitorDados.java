@@ -18,11 +18,20 @@
 
 package com.thiagovinicius.android.saldooi.sms;
 
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.thiagovinicius.android.saldooi.db.AuxiliarOrm;
+import com.thiagovinicius.android.saldooi.db.PacoteDados;
+import com.thiagovinicius.android.saldooi.db.PacoteDados.OrigemDados;
+import com.thiagovinicius.android.saldooi.util.Utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +44,16 @@ public class LeitorDados extends BroadcastReceiver {
 	public static final String ACTION_PROCESSAR_DADOS = "com.thiagovinicius.android.saldooi.sms.LeitorDados.ACTION_PROCESSAR_DADOS";
 	private static final Logger logger = LoggerFactory
 			.getLogger(LeitorDados.class.getSimpleName());
+
+	private static Date decodificaData(String dataStr) {
+		Calendar cal = Calendar.getInstance();
+		String campos[] = dataStr.split("/");
+		cal.set(Calendar.DAY_OF_MONTH, new Integer(campos[0]));
+		cal.set(Calendar.MONTH, new Integer(campos[1]) - 1);
+		cal.set(Calendar.YEAR, new Integer(campos[2]));
+		cal = Utils.meiaNoite(cal);
+		return cal.getTime();
+	}
 
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
@@ -49,6 +68,7 @@ public class LeitorDados extends BroadcastReceiver {
 		if (texto != null) {
 			logger.debug("Recebida mensagem: \"{}\"", texto);
 			processaSaldoPrincipal(texto);
+			processaAdesaoBonusInternet(ctx, texto);
 		}
 
 	}
@@ -60,16 +80,56 @@ public class LeitorDados extends BroadcastReceiver {
 
 		Matcher comparador = padrao.matcher(texto);
 		int saldo;
-		String data;
+		Date data;
 
 		if (comparador.matches()) {
-			logger.debug("Mensagem de saldo detectada; ({} grupos)",
+			logger.debug("Mensagem de saldo detectada; {} grupos",
 					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
 				saldo = (int) (new Double(comparador.group(1)) * 100d);
-				data = comparador.group(2);
+				data = decodificaData(comparador.group(2));
 				logger.info("Saldo: {} => {}", comparador.group(1), saldo);
 				logger.info("Validade: {} => {}", comparador.group(2), data);
+			}
+		}
+
+	}
+
+	private void processaAdesaoBonusInternet(Context ctx, String texto) {
+
+		final Pattern padrao = Pattern
+				.compile("\\QParabens! Por apenas R$ \\E\\d+[\\.,]\\d{2}\\Q voce comprou \\E(\\d+)\\Q MB em internet validos ate \\E(\\d+\\/\\d+/\\d+)!");
+
+		Matcher comparador = padrao.matcher(texto);
+		int saldo;
+		Date validade;
+
+		if (comparador.matches()) {
+			logger.debug("Mensagem de compra de bonus de internet; {} grupos",
+					comparador.groupCount());
+			if (comparador.groupCount() == 2) {
+				AuxiliarOrm db = OpenHelperManager.getHelper(ctx,
+						AuxiliarOrm.class);
+
+				try {
+
+					saldo = new Integer(comparador.group(1));
+					validade = decodificaData(comparador.group(2));
+
+					PacoteDados entrada = new PacoteDados();
+					entrada.dataInformacao = Calendar.getInstance().getTime();
+					entrada.origem = OrigemDados.SMS;
+					entrada.saldoBytes = saldo * 1024 * 1024;
+					entrada.validade = validade;
+
+					entrada.persiste(ctx, db.pacoteDados());
+
+				} catch (SQLException ex) {
+					logger.error("", ex);
+				} finally {
+					OpenHelperManager.releaseHelper();
+				}
+
 			}
 		}
 

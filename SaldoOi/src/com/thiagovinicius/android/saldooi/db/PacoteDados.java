@@ -21,10 +21,16 @@ package com.thiagovinicius.android.saldooi.db;
 import java.sql.SQLException;
 import java.util.Date;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thiagovinicius.android.saldooi.agendado.ProgramaAlarmes;
+import com.thiagovinicius.android.saldooi.views.PlanoDados;
 
 /**
  * @author thiago
@@ -61,6 +67,23 @@ public class PacoteDados {
 	public OrigemDados origem;
 
 	public PacoteDados() { // Não remova o construtor padrão.
+	}
+
+	public void persiste(Context ctx, Dao<PacoteDados, Long> dao)
+			throws SQLException {
+
+		dao.create(this);
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(ctx);
+		long validadeAntiga = prefs.getLong(PlanoDados.CHAVE_VALIDADE, 0L);
+		if (validade.getTime() > validadeAntiga) {
+			ProgramaAlarmes.atualizaAlarme(ctx);
+			SharedPreferences.Editor ed = prefs.edit();
+			ed.putLong(PlanoDados.CHAVE_VALIDADE, validade.getTime());
+			ed.commit();
+		}
+
 	}
 
 	public static PacoteDados encontraMaiorValidade(Dao<PacoteDados, Long> dao)

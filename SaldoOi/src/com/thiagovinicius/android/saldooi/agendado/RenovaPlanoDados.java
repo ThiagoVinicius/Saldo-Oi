@@ -98,17 +98,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 			novaValidade.saldoBytes = 0;
 			novaValidade.validade = validade.getTime();
 
-			db.pacoteDados().create(novaValidade);
-
-			SharedPreferences prefs = PreferenceManager
-					.getDefaultSharedPreferences(ctx);
-			long validadeAntiga = prefs.getLong(PlanoDados.CHAVE_VALIDADE, 0L);
-			if (validade.getTimeInMillis() > validadeAntiga) {
-				SharedPreferences.Editor ed = prefs.edit();
-				ed.putLong(PlanoDados.CHAVE_VALIDADE,
-						validade.getTimeInMillis());
-				ed.commit();
-			}
+			novaValidade.persiste(ctx, db.pacoteDados());
 
 		} catch (SQLException ex) {
 			logger.error("", ex);
