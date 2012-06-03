@@ -69,6 +69,7 @@ public class LeitorDados extends BroadcastReceiver {
 			logger.debug("Recebida mensagem: \"{}\"", texto);
 			processaSaldoPrincipal(texto);
 			processaAdesaoBonusInternet(ctx, texto);
+			processaBonusInternetEsgotado(ctx, texto);
 		}
 
 	}
@@ -131,6 +132,43 @@ public class LeitorDados extends BroadcastReceiver {
 				}
 
 			}
+		}
+
+	}
+
+	private void processaBonusInternetEsgotado(Context ctx, String texto) {
+
+		final String padrao = "Voce consumiu todo pacote de internet no "
+				+ "celular. Sua velocidade sera reduzida. Pra continuar "
+				+ "navegando com velocidade maior, ligue*880 e compre um "
+				+ "novo pacote";
+
+		if (padrao.equals(texto)) {
+
+			logger.debug("Mensagem de bonus de internet esgotado.");
+
+			AuxiliarOrm db = OpenHelperManager
+					.getHelper(ctx, AuxiliarOrm.class);
+
+			try {
+
+				PacoteDados infoAtual = PacoteDados.encontraMaiorValidade(db
+						.pacoteDados());
+				PacoteDados novaInfo = new PacoteDados();
+
+				novaInfo.dataInformacao = Calendar.getInstance().getTime();
+				novaInfo.origem = OrigemDados.SMS;
+				novaInfo.saldoBytes = 0;
+				novaInfo.validade = infoAtual.validade;
+
+				novaInfo.persiste(ctx, db.pacoteDados());
+
+			} catch (SQLException ex) {
+				logger.error("", ex);
+			} finally {
+				OpenHelperManager.releaseHelper();
+			}
+
 		}
 
 	}
