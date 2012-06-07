@@ -28,7 +28,8 @@
         <item>30</item>
     </array>
 
-    <string name="preferencias_titulo_renova_dados">Plano de dados: Renovação automática</string>
+    <string name="preferencias_titulo_renova_dados_info">Informações</string>
+    <string name="preferencias_titulo_renova_dados_config">Configurações</string>
     <string name="preferencias_titulo_dados_validade">Validade</string>
     <string name="preferencias_descricao_dados_validade">Desconhecida</string>
     <string name="preferencias_titulo_dados_proximo">Próxima renovação</string>
@@ -52,5 +53,6 @@
     <string name="rotulo_entendi">Entendi!</string>
 
     <string name="view_plano_dados">Plano de dados</string>
+    <string name="view_plano_dados_titulo">Saldo Oi - Plano de dados</string>
 
 </resources>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/view_plano_dados_titulo">
 
-    <PreferenceCategory android:title="@string/preferencias_titulo_renova_dados" >
+    <PreferenceCategory android:title="@string/preferencias_titulo_renova_dados_info" >
         <Preference
             android:key="renova_dados_validade"
             android:persistent="false"
@@ -14,7 +15,9 @@
             android:selectable="false"
             android:summary="@string/preferencias_descricao_dados_proximo"
             android:title="@string/preferencias_titulo_dados_proximo" />
+	</PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/preferencias_titulo_renova_dados_config" >
         <ListPreference
             android:dialogTitle="@string/preferencias_titulo_renova_dados_valor"
             android:entries="@array/renova_dados_valores_descricao"
