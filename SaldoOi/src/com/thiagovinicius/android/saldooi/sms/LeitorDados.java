@@ -70,6 +70,7 @@ public class LeitorDados extends BroadcastReceiver {
 			processaSaldoPrincipal(texto);
 			processaBonusInternetAdesao(ctx, texto);
 			processaBonusInternetEsgotado(ctx, texto);
+			processaBonusInternetSaldo(ctx, texto);
 		}
 
 	}
@@ -172,6 +173,46 @@ public class LeitorDados extends BroadcastReceiver {
 				OpenHelperManager.releaseHelper();
 			}
 
+		}
+
+	}
+
+	private void processaBonusInternetSaldo(Context ctx, String texto) {
+
+		final Pattern padrao = Pattern
+				.compile("\\QSeu saldo promocional de internet é de \\E(\\d+[\\.,]\\d+)\\Q MB com data de validade até \\E(\\d+\\/\\d+/\\d+)\\.");
+
+		Matcher comparador = padrao.matcher(texto);
+		double saldo;
+		Date validade;
+
+		if (comparador.matches()) {
+			logger.debug("Mensagem de saldo de bonus de internet; {} grupos",
+					comparador.groupCount());
+			if (comparador.groupCount() == 2) {
+				AuxiliarOrm db = OpenHelperManager.getHelper(ctx,
+						AuxiliarOrm.class);
+
+				try {
+
+					saldo = new Double(comparador.group(1).replace(',', '.'));
+					validade = decodificaData(comparador.group(2));
+
+					PacoteDados entrada = new PacoteDados();
+					entrada.dataInformacao = Calendar.getInstance().getTime();
+					entrada.origem = OrigemDados.SMS;
+					entrada.saldoBytes = Math.round(saldo * 1024d * 1024d);
+					entrada.validade = validade;
+
+					entrada.persiste(ctx, db.pacoteDados());
+
+				} catch (SQLException ex) {
+					logger.error("", ex);
+				} finally {
+					OpenHelperManager.releaseHelper();
+				}
+
+			}
 		}
 
 	}
