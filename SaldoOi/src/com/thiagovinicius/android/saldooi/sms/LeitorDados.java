@@ -154,14 +154,17 @@ public class LeitorDados extends BroadcastReceiver {
 
 				PacoteDados infoAtual = PacoteDados.encontraMaiorValidade(db
 						.pacoteDados());
-				PacoteDados novaInfo = new PacoteDados();
 
-				novaInfo.dataInformacao = Calendar.getInstance().getTime();
-				novaInfo.origem = OrigemDados.SMS;
-				novaInfo.saldoBytes = 0;
-				novaInfo.validade = infoAtual.validade;
+				if (infoAtual != null) {
+					PacoteDados novaInfo = new PacoteDados();
 
-				novaInfo.persiste(ctx, db.pacoteDados());
+					novaInfo.dataInformacao = Calendar.getInstance().getTime();
+					novaInfo.origem = OrigemDados.SMS;
+					novaInfo.saldoBytes = 0;
+					novaInfo.validade = infoAtual.validade;
+
+					novaInfo.persiste(ctx, db.pacoteDados());
+				}
 
 			} catch (SQLException ex) {
 				logger.error("", ex);
