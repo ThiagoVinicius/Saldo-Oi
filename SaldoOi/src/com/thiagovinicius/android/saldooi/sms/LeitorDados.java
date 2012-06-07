@@ -45,14 +45,30 @@ public class LeitorDados extends BroadcastReceiver {
 	private static final Logger logger = LoggerFactory
 			.getLogger(LeitorDados.class.getSimpleName());
 
-	private static Date decodificaData(String dataStr) {
+	private static Calendar decodificaData(String dataStr) {
 		Calendar cal = Calendar.getInstance();
 		String campos[] = dataStr.split("/");
 		cal.set(Calendar.DAY_OF_MONTH, new Integer(campos[0]));
 		cal.set(Calendar.MONTH, new Integer(campos[1]) - 1);
 		cal.set(Calendar.YEAR, new Integer(campos[2]));
-		cal = Utils.meiaNoite(cal);
-		return cal.getTime();
+		return cal;
+	}
+
+	/**
+	 * Utilize este, quando a data se referir à "zero hora de <i>data</i>".
+	 */
+	private static Date decodificaDataMesmoDia(String dataStr) {
+		return Utils.meiaNoite(decodificaData(dataStr)).getTime();
+	}
+
+	/**
+	 * Utilize este, quando a data se referir à "até <i>data</i>", ou seja,
+	 * meia noite do dia seguinte.
+	 */
+	private static Date decodificaDataDiaSeguinte(String dataStr) {
+		Calendar cal = decodificaData(dataStr);
+		cal.roll(Calendar.DAY_OF_MONTH, true);
+		return Utils.meiaNoite(cal).getTime();
 	}
 
 	@Override
@@ -89,7 +105,7 @@ public class LeitorDados extends BroadcastReceiver {
 					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
 				saldo = (int) (new Double(comparador.group(1).replace(',', '.')) * 100d);
-				data = decodificaData(comparador.group(2));
+				data = decodificaDataMesmoDia(comparador.group(2));
 				logger.info("Saldo: {} => {}", comparador.group(1), saldo);
 				logger.info("Validade: {} => {}", comparador.group(2), data);
 			}
@@ -116,7 +132,7 @@ public class LeitorDados extends BroadcastReceiver {
 				try {
 
 					saldo = new Integer(comparador.group(1));
-					validade = decodificaData(comparador.group(2));
+					validade = decodificaDataDiaSeguinte(comparador.group(2));
 
 					PacoteDados entrada = new PacoteDados();
 					entrada.dataInformacao = Calendar.getInstance().getTime();
@@ -196,7 +212,7 @@ public class LeitorDados extends BroadcastReceiver {
 				try {
 
 					saldo = new Double(comparador.group(1).replace(',', '.'));
-					validade = decodificaData(comparador.group(2));
+					validade = decodificaDataDiaSeguinte(comparador.group(2));
 
 					PacoteDados entrada = new PacoteDados();
 					entrada.dataInformacao = Calendar.getInstance().getTime();
