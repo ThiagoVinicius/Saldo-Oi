@@ -68,7 +68,7 @@ public class LeitorDados extends BroadcastReceiver {
 		if (texto != null) {
 			logger.debug("Recebida mensagem: \"{}\"", texto);
 			processaSaldoPrincipal(texto);
-			processaAdesaoBonusInternet(ctx, texto);
+			processaBonusInternetAdesao(ctx, texto);
 			processaBonusInternetEsgotado(ctx, texto);
 		}
 
@@ -96,7 +96,7 @@ public class LeitorDados extends BroadcastReceiver {
 
 	}
 
-	private void processaAdesaoBonusInternet(Context ctx, String texto) {
+	private void processaBonusInternetAdesao(Context ctx, String texto) {
 
 		final Pattern padrao = Pattern
 				.compile("\\QParabens! Por apenas R$ \\E\\d+[\\.,]\\d{2}\\Q voce comprou \\E(\\d+)\\Q MB em Internet validos ate \\E(\\d+\\/\\d+/\\d+)!");
