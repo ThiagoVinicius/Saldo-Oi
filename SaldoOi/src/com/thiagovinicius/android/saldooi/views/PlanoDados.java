@@ -18,6 +18,7 @@
 
 package com.thiagovinicius.android.saldooi.views;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.AlertDialog;
@@ -26,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
@@ -57,6 +59,7 @@ public class PlanoDados extends PreferenceActivity implements
 		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
 
 		findPreference(CHAVE_RENOVAR).setOnPreferenceClickListener(this);
+		findPreference(CHAVE_HABILITADO).setOnPreferenceClickListener(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		atualizaTipoRenovacao(prefs);
 		atualizaProximaRenovacao(prefs);
@@ -69,6 +72,7 @@ public class PlanoDados extends PreferenceActivity implements
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
 		findPreference(CHAVE_RENOVAR).setOnPreferenceClickListener(null);
+		findPreference(CHAVE_HABILITADO).setOnPreferenceClickListener(null);
 	}
 
 	@Override
@@ -99,13 +103,51 @@ public class PlanoDados extends PreferenceActivity implements
 			alerta.show();
 
 		}
+
 		return false;
 	}
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String chave) {
+
 		if (CHAVE_PLANO.equals(chave) || CHAVE_HABILITADO.equals(chave)) {
-			RenovaPlanoDados.agendaRenovacao(this);
+
+			boolean podeAgendar = true;
+
+			if (CHAVE_HABILITADO.equals(chave)) {
+
+				long agora = Calendar.getInstance().getTimeInMillis();
+				int mensagemErro = 0;
+
+				if (prefs.getBoolean(CHAVE_HABILITADO, false) == false) {
+					mensagemErro = 0;
+				} else if (prefs.contains(CHAVE_VALIDADE) == false) {
+					mensagemErro = R.string.mensagem_erro_renova_dados_sem_info;
+				} else if (prefs.getLong(CHAVE_VALIDADE, 0L) < agora) {
+					mensagemErro = R.string.mensagem_erro_renova_dados_vencido;
+				}
+
+				if (mensagemErro != 0) {
+
+					podeAgendar = false;
+					((CheckBoxPreference) findPreference(CHAVE_HABILITADO))
+							.setChecked(false);
+
+					AlertDialog.Builder erro = new AlertDialog.Builder(this);
+					erro.setMessage(mensagemErro);
+					erro.setPositiveButton(R.string.rotulo_entendi, null);
+					erro.setTitle(android.R.string.dialog_alert_title);
+					erro.setIcon(android.R.drawable.ic_dialog_alert);
+					AlertDialog alertaErro = erro.create();
+					alertaErro.show();
+
+				}
+
+			}
+
+			if (podeAgendar) {
+				RenovaPlanoDados.agendaRenovacao(this);
+			}
 		}
 		if (CHAVE_PLANO.equals(chave)) {
 			atualizaTipoRenovacao(prefs);
