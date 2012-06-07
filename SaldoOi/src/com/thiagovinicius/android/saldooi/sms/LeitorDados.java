@@ -77,7 +77,7 @@ public class LeitorDados extends BroadcastReceiver {
 	private void processaSaldoPrincipal(String texto) {
 
 		final Pattern padrao = Pattern
-				.compile("\\QOi, seu saldo e R$ \\E(\\d+\\.\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
+				.compile("\\QOi, seu saldo e R$ \\E(\\d+[\\.,]\\d{2})\\Q. Seus creditos sao validos ate a zero hora de \\E(\\d+\\/\\d+/\\d+)\\Q. Obrigado\\E");
 
 		Matcher comparador = padrao.matcher(texto);
 		int saldo;
@@ -87,7 +87,7 @@ public class LeitorDados extends BroadcastReceiver {
 			logger.debug("Mensagem de saldo detectada; {} grupos",
 					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
-				saldo = (int) (new Double(comparador.group(1)) * 100d);
+				saldo = (int) (new Double(comparador.group(1).replace(',', '.')) * 100d);
 				data = decodificaData(comparador.group(2));
 				logger.info("Saldo: {} => {}", comparador.group(1), saldo);
 				logger.info("Validade: {} => {}", comparador.group(2), data);
