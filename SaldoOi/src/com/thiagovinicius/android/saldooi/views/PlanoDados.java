@@ -160,6 +160,11 @@ public class PlanoDados extends PreferenceActivity implements
 		}
 	}
 
+	private void dependeExistência(SharedPreferences prefs, String mestre,
+			String escravo) {
+		findPreference(escravo).setEnabled(prefs.contains(mestre));
+	}
+
 	private void atualizaTipoRenovacao(SharedPreferences prefs) {
 		Preference seletorTipo = findPreference(CHAVE_PLANO);
 
@@ -173,6 +178,9 @@ public class PlanoDados extends PreferenceActivity implements
 			seletorTipo
 					.setSummary(R.string.preferencias_descricao_renova_dados_valor);
 		}
+
+		dependeExistência(prefs, CHAVE_PLANO, CHAVE_HABILITADO);
+		dependeExistência(prefs, CHAVE_PLANO, CHAVE_RENOVAR);
 
 	}
 
