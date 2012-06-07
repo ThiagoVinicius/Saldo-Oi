@@ -99,7 +99,7 @@ public class LeitorDados extends BroadcastReceiver {
 	private void processaAdesaoBonusInternet(Context ctx, String texto) {
 
 		final Pattern padrao = Pattern
-				.compile("\\QParabens! Por apenas R$ \\E\\d+[\\.,]\\d{2}\\Q voce comprou \\E(\\d+)\\Q MB em internet validos ate \\E(\\d+\\/\\d+/\\d+)!");
+				.compile("\\QParabens! Por apenas R$ \\E\\d+[\\.,]\\d{2}\\Q voce comprou \\E(\\d+)\\Q MB em Internet validos ate \\E(\\d+\\/\\d+/\\d+)!");
 
 		Matcher comparador = padrao.matcher(texto);
 		int saldo;
