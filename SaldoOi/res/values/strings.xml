@@ -53,6 +53,10 @@
 
     <string name="rotulo_entendi">Entendi!</string>
 
+    <string name="view_principal_descricao">Esta aplicação pode ser utilizada
+        para acompanhar o Saldo de Internet da sua linha Oi. Vá em frente e
+        toque na opção abaixo para começar:</string>
+
     <string name="view_plano_dados">Plano de dados</string>
     <string name="view_plano_dados_titulo">Saldo Oi - Plano de dados</string>
 
