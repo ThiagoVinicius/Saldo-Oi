@@ -22,19 +22,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.widget.TextView;
 
 import com.thiagovinicius.android.saldooi.R;
@@ -43,7 +36,7 @@ import com.thiagovinicius.android.saldooi.R;
  * @author thiago
  *
  */
-public class Sobre extends ListActivity {
+public class Sobre extends PreferenceActivity {
 
 	public static class Licencas extends Activity {
 
@@ -90,33 +83,20 @@ public class Sobre extends ListActivity {
 
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setTitle(getResources().getString(R.string.view_sobre_titulo));
-
-		Map<String, Object> entries = new HashMap<String, Object>();
-		entries.put("intent", new Intent(this, Licencas.class));
-		entries.put("titulo",
-				getResources().getString(R.string.view_sobre_licencas));
-
-		List<Map<String, Object>> entriesList = new ArrayList<Map<String, Object>>();
-		entriesList.add(entries);
-
-		setListAdapter(new SimpleAdapter(this, entriesList,
-				android.R.layout.simple_list_item_1, new String[] { "titulo" },
-				new int[] { android.R.id.text1 }));
+	public static class Versao extends Activity {
 
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		@SuppressWarnings("rawtypes")
-		Map map = (Map) l.getItemAtPosition(position);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.sobre);
 
-		Intent intent = (Intent) map.get("intent");
-		startActivity(intent);
+		Preference prefVersao = findPreference("versao");
+		String prefixoVersao = getResources().getString(
+				R.string.view_sobre_versao_titulo);
+		String nomeVersao = getResources().getString(R.string.nome_versao);
+		prefVersao.setTitle(String.format("%s: %s", prefixoVersao, nomeVersao));
 	}
 
 }

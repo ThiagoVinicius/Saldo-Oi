@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="nome_versao">0.1</string>
+    <integer name="numero_versao">1</integer>
+
+    <!-- Não edite a linha abaixo, ela é necessária ao sistema de build -->
+    <string name="info_scm"></string>
+
+</resources>
