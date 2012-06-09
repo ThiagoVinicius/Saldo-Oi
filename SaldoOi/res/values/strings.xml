@@ -49,6 +49,7 @@
     <string name="mensagem_confirmacao_renova_dados_agora">Renovar plano de dados imediatamente?</string>
     <string name="mensagem_erro_renova_dados_vencido">Não posso fazer isso! Seu bônus de internet já está vencido, renove-o manualmente antes de tentar novamente.</string>
     <string name="mensagem_erro_renova_dados_sem_info">Ooops, não sei a validade de seu bônus de internet. Se desejar, renove seu saldo manualmente.</string>
+    <string name="descricao_renova_dados_bloqueado">Disponível em %s</string>
 
     <string name="rotulo_entendi">Entendi!</string>
 

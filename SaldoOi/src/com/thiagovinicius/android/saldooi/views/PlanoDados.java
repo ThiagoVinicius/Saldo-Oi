@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -44,26 +45,64 @@ public class PlanoDados extends PreferenceActivity implements
 	public static final String CHAVE_PLANO = "renova_dados_tipo";
 	public static final String CHAVE_VALIDADE = "renova_dados_validade";
 	public static final String CHAVE_RENOVAR = "renova_dados_agora";
+	public static final String CHAVE_RENOVAR_HORA = "renova_dados_agora_hora";
+
+	private static final long ATRASO_RENOVACAO_MS = 1000 * 60 * 10; // 10 min
+
+	private SharedPreferences mPrefs;
+	private Handler mManipulador = new Handler();
+	private Runnable mAvisoRenovacaoDesabilitada = new Runnable() {
+		@Override
+		public void run() {
+
+			if (mPrefs.contains(CHAVE_RENOVAR_HORA)) {
+				long quando = mPrefs.getLong(CHAVE_RENOVAR_HORA, 0L);
+				long atraso = quando + ATRASO_RENOVACAO_MS
+						- Calendar.getInstance().getTimeInMillis();
+
+				if (atraso > 0) {
+					long minutos = atraso / 60000;
+					long segundos = (atraso / 1000) % 60;
+					String texto = String.format("%02d\"%02d'", minutos,
+							segundos);
+					texto = String.format(
+							getResources().getString(
+									R.string.descricao_renova_dados_bloqueado),
+							texto);
+					findPreference(CHAVE_RENOVAR).setSummary(texto);
+					findPreference(CHAVE_RENOVAR).setEnabled(false);
+					mManipulador.postDelayed(this, 1000);
+				} else {
+					findPreference(CHAVE_RENOVAR).setEnabled(true);
+					findPreference(CHAVE_RENOVAR).setSummary(null);
+					SharedPreferences.Editor ed = mPrefs.edit();
+					ed.remove(CHAVE_RENOVAR_HORA);
+					ed.commit();
+				}
+			}
+
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		addPreferencesFromResource(R.xml.plano_dados);
+		mPrefs = getPreferenceScreen().getSharedPreferences();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
-
 		findPreference(CHAVE_RENOVAR).setOnPreferenceClickListener(this);
 		findPreference(CHAVE_HABILITADO).setOnPreferenceClickListener(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
-		atualizaTipoRenovacao(prefs);
-		atualizaProximaRenovacao(prefs);
-		atualizaValidade(prefs);
+		mPrefs.registerOnSharedPreferenceChangeListener(this);
+		atualizaTipoRenovacao(mPrefs);
+		atualizaProximaRenovacao(mPrefs);
+		atualizaValidade(mPrefs);
+		mManipulador.post(mAvisoRenovacaoDesabilitada);
 	}
 
 	@Override
@@ -73,6 +112,7 @@ public class PlanoDados extends PreferenceActivity implements
 				.unregisterOnSharedPreferenceChangeListener(this);
 		findPreference(CHAVE_RENOVAR).setOnPreferenceClickListener(null);
 		findPreference(CHAVE_HABILITADO).setOnPreferenceClickListener(null);
+		mManipulador.removeCallbacks(mAvisoRenovacaoDesabilitada);
 	}
 
 	@Override
@@ -91,6 +131,11 @@ public class PlanoDados extends PreferenceActivity implements
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							RenovaPlanoDados.renovaImediatamente(self);
+							SharedPreferences.Editor ed = mPrefs.edit();
+							ed.putLong(CHAVE_RENOVAR_HORA, Calendar
+									.getInstance().getTimeInMillis());
+							ed.commit();
+							mManipulador.post(mAvisoRenovacaoDesabilitada);
 						}
 					});
 
