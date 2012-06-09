@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".views.PlanoDados" />
+        <activity android:name=".views.Sobre" />
+        <activity android:name=".views.Sobre$Licencas" />
 
         <receiver android:name=".sms.FiltroRemetente" android:exported="true" >
             <intent-filter>

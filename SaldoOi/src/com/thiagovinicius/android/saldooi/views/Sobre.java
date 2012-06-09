@@ -12,39 +12,94 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Saldo Oi.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Saldo Oi. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 package com.thiagovinicius.android.saldooi.views;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.thiagovinicius.android.saldooi.R;
 
-public class Principal extends ListActivity {
+/**
+ * @author thiago
+ *
+ */
+public class Sobre extends ListActivity {
+
+	public static class Licencas extends Activity {
+
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			Resources res = getResources();
+			String texto;
+			try {
+				texto = textoLicencas(res);
+			} catch (IOException e) {
+				texto = "Erro ao carregar tela!";
+			}
+			setTitle(res.getString(R.string.view_sobre_licencas_titulo));
+			setContentView(R.layout.view_licencas);
+			TextView tv = (TextView) findViewById(R.id.sobre_licencas);
+			tv.setText(texto);
+		}
+
+		private String textoLicencas(Resources res) throws IOException {
+			byte dados[] = new byte[8096];
+			int lido;
+
+			InputStream is = res.openRawResource(R.raw.licencas);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+			for (;;) {
+				lido = is.read(dados);
+				if (lido <= 0) {
+					break;
+				} else {
+					bos.write(dados, 0, lido);
+				}
+			}
+
+			try {
+				return bos.toString("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// every java runtime must support this one.
+				throw e;
+			}
+
+		}
+
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		setTitle(getResources().getString(R.string.view_sobre_titulo));
+
 		Map<String, Object> entries = new HashMap<String, Object>();
-		entries.put("intent", new Intent(this, PlanoDados.class));
+		entries.put("intent", new Intent(this, Licencas.class));
 		entries.put("titulo",
-				getResources().getString(R.string.view_plano_dados));
+				getResources().getString(R.string.view_sobre_licencas));
 
 		List<Map<String, Object>> entriesList = new ArrayList<Map<String, Object>>();
 		entriesList.add(entries);
@@ -62,22 +117,6 @@ public class Principal extends ListActivity {
 
 		Intent intent = (Intent) map.get("intent");
 		startActivity(intent);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.principal, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_principal_sobre) {
-			startActivity(new Intent(this, Sobre.class));
-			return true;
-		}
-		return false;
 	}
 
 }

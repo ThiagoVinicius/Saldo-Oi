@@ -56,4 +56,10 @@
     <string name="view_plano_dados">Plano de dados</string>
     <string name="view_plano_dados_titulo">Saldo Oi - Plano de dados</string>
 
+    <string name="view_sobre">Sobre</string>
+    <string name="view_sobre_titulo">Saldo Oi - Sobre</string>
+
+    <string name="view_sobre_licencas">Licenças</string>
+    <string name="view_sobre_licencas_titulo">Saldo Oi - Licenças</string>
+
 </resources>
