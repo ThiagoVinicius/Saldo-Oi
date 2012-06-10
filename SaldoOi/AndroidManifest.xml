@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".views.Principal"
+            android:name=".views.BoasVindas"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".views.Principal" />
         <activity android:name=".views.PlanoDados" />
         <activity android:name=".views.Sobre" />
         <activity android:name=".views.Sobre$Licencas" />

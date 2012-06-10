@@ -68,4 +68,25 @@
     <string name="view_sobre_licencas">Licenças</string>
     <string name="view_sobre_licencas_titulo">Saldo Oi - Licenças</string>
 
+    <string name="view_boas_vindas_descricao">
+        <![CDATA[
+        <p>
+        Leia com atenção.
+        </p>
+        <p>
+        Esta aplicação pode consumir créditos e gerar gastos indesejados, se
+        utilizada de forma indevida. O AUTOR NÃO SE RESPONSABILIZA, SOB NENHUMA
+        CIRCUNSTÂNCIA, POR GASTOS DECORRENTES DA UTILIZAÇÃO DESTA APLICAÇÂO.
+        </p>
+        <p>
+        O autor desta aplicação não é afiliado à operadora Oi ou seus parceiros.
+        ESTA NÃO É UMA APLICAÇÃO OFICIAL DA OI.
+        </p>
+        <p>
+        O AUTOR NÃO SE RESPOSABILIZA POR EVENTUAIS DEFEITOS CONTIDOS NESTA
+        APLICAÇÃO, NEM POR QUALQUER PREJUÍZO CAUSADO POR TAIS DEFEITOS.
+        </p>
+        ]]>
+    </string>
+
 </resources>
