@@ -9,6 +9,13 @@
         android:summary="@string/info_scm"/>
 
     <PreferenceScreen
+        android:title="@string/view_sobre_projeto_titulo">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/view_sobre_projeto_url"/>
+    </PreferenceScreen>
+
+    <PreferenceScreen
         android:title="@string/view_sobre_licencas">
         <intent
             android:targetPackage="com.thiagovinicius.android.saldooi"
