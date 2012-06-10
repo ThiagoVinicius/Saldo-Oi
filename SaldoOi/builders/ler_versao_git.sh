@@ -6,15 +6,13 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-hash=`git show --pretty='format:%h' -s`
+hash=`git rev-parse --short HEAD`
 if [ $? -ne 0 ]; then
   echo "Não estamos em um repositório git!"
   hash=""
 fi
 
-git update-index --assume-unchanged -- "$@"
 estado=`git status --porcelain`
-git update-index --no-assume-unchanged -- "$@"
 if [ "${estado}" != "" ] && [ "$hash" != "" ]; then
   hash=${hash}"*"
 fi

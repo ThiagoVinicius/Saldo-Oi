@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Não utilize esse arquivo para definir valores, exceto "info_scm" -->
+
+    <!-- Não edite a linha abaixo, ela é necessária ao sistema de build -->
+    <string name="info_scm"></string>
+
+</resources>
