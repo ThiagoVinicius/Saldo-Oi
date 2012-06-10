@@ -37,7 +37,7 @@
     <string name="preferencias_titulo_renova_dados_agora">Renovar agora!</string>
 
     <string name="preferencias_titulo_renova_dados_habilitado">Renovar ao vencer</string>
-    <string name="preferencias_titulo_renova_dados_valor">Plano de dados:</string>
+    <string name="preferencias_titulo_renova_dados_valor">Plano de dados</string>
     <string name="preferencias_descricao_renova_dados_valor">Selecione</string>
 
     <string-array name="preferencias_renova_dados_valores">
