@@ -7,6 +7,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dip"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:text="@string/view_principal_descricao"/>
 
