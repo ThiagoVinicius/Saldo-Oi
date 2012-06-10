@@ -83,10 +83,6 @@ public class Sobre extends PreferenceActivity {
 
 	}
 
-	public static class Versao extends Activity {
-
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
