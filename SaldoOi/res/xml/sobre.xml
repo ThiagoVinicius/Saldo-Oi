@@ -9,6 +9,13 @@
         android:summary="@string/info_scm"/>
 
     <PreferenceScreen
+        android:title="@string/view_sobre_autores">
+        <intent
+            android:targetPackage="com.thiagovinicius.android.saldooi"
+            android:targetClass="com.thiagovinicius.android.saldooi.views.Sobre$Autores"/>
+    </PreferenceScreen>
+
+    <PreferenceScreen
         android:title="@string/view_sobre_projeto_titulo">
         <intent
             android:action="android.intent.action.VIEW"

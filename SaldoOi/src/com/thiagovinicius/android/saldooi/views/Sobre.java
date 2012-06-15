@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.text.Html;
 import android.widget.TextView;
 
 import com.thiagovinicius.android.saldooi.R;
@@ -81,6 +82,18 @@ public class Sobre extends PreferenceActivity {
 
 		}
 
+	}
+
+	public static class Autores extends Activity {
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.view_autores);
+			TextView tv = (TextView) findViewById(R.id.sobre_autores_textview);
+			tv.setText(Html.fromHtml(getResources().getString(
+					R.string.view_sobre_autores_texto)));
+			setTitle(R.string.view_sobre_autores_titulo);
+		}
 	}
 
 	@Override

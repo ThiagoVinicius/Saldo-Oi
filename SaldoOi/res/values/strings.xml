@@ -71,6 +71,23 @@
     <string name="view_sobre_licencas">Licenças</string>
     <string name="view_sobre_licencas_titulo">Saldo Oi - Licenças</string>
 
+    <string name="view_sobre_autores">Autores</string>
+    <string name="view_sobre_autores_titulo">Saldo Oi - Autores</string>
+    <string name="view_sobre_autores_texto">
+        <![CDATA[
+        <p>
+        <h3>Desenvolvimento</strong></h3>
+        Thiago Vinícius Freire de Araújo Ribeiro<br/>
+        <u>android@thiagovinicius.com</u>
+        </p>
+        <p>
+        <h3>Ícones</h3>
+        Jailton Maciel<br/>
+        <u>jailton.mas@gmail.com</u>
+        </p>
+        ]]>
+    </string>
+
     <string name="view_boas_vindas_descricao">
         <![CDATA[
         <p>
