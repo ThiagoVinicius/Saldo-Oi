@@ -18,20 +18,20 @@
 
 package com.thiagovinicius.android.saldooi.views;
 
-import com.thiagovinicius.android.saldooi.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.thiagovinicius.android.saldooi.R;
 
 /**
  * @author thiago
@@ -47,52 +47,31 @@ public class BoasVindas extends Activity implements OnClickListener {
 	private Button mBotaoNegativo;
 	private SharedPreferences mPrefs;
 
-	private int mAtrasoDado = 0;
+	private long mAtrasoHora;
+	private long mAtrasoDado = 0;
+	private boolean mZerarAtraso = false;
 
 	private Handler mManipulador = new Handler();
-	private Runnable mHabilitarBotaoEntendi = new Runnable() {
+	private Runnable mHabilitarBotaoPositivo = new Runnable() {
 
 		@Override
 		public void run() {
-			int diferenca = ATRASO_CONFIRMACAO - mAtrasoDado;
-			String original = getResources().getString(
-					R.string.view_boas_vindas_aceito);
-			if (diferenca >= 0) {
-
-				mBotaoPositivo.setText(String.format("%s (%d)", original,
-						diferenca / 1000));
-				mBotaoPositivo.setEnabled(false);
-				mAtrasoDado += 1000;
-				mManipulador.postDelayed(this, 1000);
-			} else {
-				mBotaoPositivo.setText(original);
-				mBotaoPositivo.setEnabled(true);
-			}
+			habilitaBotaoPositivo();
 		}
 	};
 
 	@Override
 	protected void onCreate(Bundle estadoSalvo) {
 		super.onCreate(estadoSalvo);
+
+		// Sempre inicialize este antes de qualquer outra coisa.
 		mPrefs = getPreferences(MODE_PRIVATE);
 
-		if (mPrefs.contains(CHAVE_CONFIRMADO)) {
+		if (jaConfirmou()) {
 			desviaParaTelaPrincipal();
 		}
 
-		Resources res = getResources();
-		setContentView(R.layout.boas_vindas);
-		mTexto = (TextView) findViewById(R.id.boas_vindas_textview);
-		mBotaoPositivo = (Button) findViewById(R.id.boas_vindas_botao_positivo);
-		mBotaoNegativo = (Button) findViewById(R.id.boas_vindas_botao_negativo);
-		mTexto.setText(Html.fromHtml(res
-				.getString(R.string.view_boas_vindas_descricao)));
-
-		if (estadoSalvo != null) {
-			mAtrasoDado = estadoSalvo.getInt("mAtrasoDado", 0);
-		} else {
-			mAtrasoDado = 0;
-		}
+		criaInterfaceGrafica();
 	}
 
 	@Override
@@ -100,7 +79,21 @@ public class BoasVindas extends Activity implements OnClickListener {
 		super.onResume();
 		mBotaoPositivo.setOnClickListener(this);
 		mBotaoNegativo.setOnClickListener(this);
-		mManipulador.post(mHabilitarBotaoEntendi);
+
+		if (mZerarAtraso) {
+			mAtrasoDado = 0L;
+			mZerarAtraso = false;
+		}
+
+		mAtrasoHora = SystemClock.uptimeMillis();
+		long atrasoRestante = ATRASO_CONFIRMACAO - mAtrasoDado;
+		if (atrasoRestante > 0L) {
+			desabilitaBotaoPositivo();
+			mManipulador.postDelayed(mHabilitarBotaoPositivo, atrasoRestante);
+		} else {
+			habilitaBotaoPositivo();
+		}
+
 	}
 
 	@Override
@@ -108,27 +101,63 @@ public class BoasVindas extends Activity implements OnClickListener {
 		super.onPause();
 		mBotaoPositivo.setOnClickListener(null);
 		mBotaoNegativo.setOnClickListener(null);
-		mManipulador.removeCallbacks(mHabilitarBotaoEntendi);
+		mAtrasoDado += SystemClock.uptimeMillis() - mAtrasoHora;
+		mManipulador.removeCallbacks(mHabilitarBotaoPositivo);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle estadoSalvo) {
+		super.onRestoreInstanceState(estadoSalvo);
+		mAtrasoDado = estadoSalvo.getLong("mAtrasoDado", 0L);
+		mZerarAtraso = estadoSalvo.getBoolean("mZerarAtraso", false);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle salvandoEstado) {
 		super.onSaveInstanceState(salvandoEstado);
-		salvandoEstado.putInt("mAtrasoDado", mAtrasoDado);
+		salvandoEstado.putLong("mAtrasoDado", mAtrasoDado);
+		salvandoEstado.putBoolean("mZerarAtraso", mZerarAtraso);
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (v == mBotaoPositivo) {
-			SharedPreferences.Editor ed = mPrefs.edit();
-			ed.putInt(CHAVE_CONFIRMADO,
-					getResources().getInteger(R.integer.numero_versao));
-			ed.commit();
+			salvaConfirmacao();
 			desviaParaTelaPrincipal();
 		}
 		if (v == mBotaoNegativo) {
 			desinstalaApp();
 		}
+	}
+
+	private void criaInterfaceGrafica() {
+		setContentView(R.layout.boas_vindas);
+		mTexto = (TextView) findViewById(R.id.boas_vindas_textview);
+		mBotaoPositivo = (Button) findViewById(R.id.boas_vindas_botao_positivo);
+		mBotaoNegativo = (Button) findViewById(R.id.boas_vindas_botao_negativo);
+		mTexto.setText(Html.fromHtml(getResources().getString(
+				R.string.view_boas_vindas_descricao)));
+	}
+
+	private boolean jaConfirmou() {
+		return mPrefs.contains(CHAVE_CONFIRMADO);
+	}
+
+	private void salvaConfirmacao() {
+		SharedPreferences.Editor ed = mPrefs.edit();
+		ed.putInt(CHAVE_CONFIRMADO,
+				getResources().getInteger(R.integer.numero_versao));
+		ed.commit();
+	}
+
+	private void desabilitaBotaoPositivo() {
+		mBotaoPositivo.setEnabled(false);
+		mBotaoPositivo.setText(R.string.view_boas_vindas_aceito_desabilitado);
+	}
+
+	private void habilitaBotaoPositivo() {
+		mBotaoPositivo.setEnabled(true);
+		mBotaoPositivo.setText(R.string.view_boas_vindas_aceito);
 	}
 
 	private void desviaParaTelaPrincipal() {
@@ -141,7 +170,7 @@ public class BoasVindas extends Activity implements OnClickListener {
 		Intent i = new Intent(Intent.ACTION_DELETE,
 				Uri.parse("package:com.thiagovinicius.android.saldooi"));
 		startActivity(i);
-		mAtrasoDado = 0;
+		mZerarAtraso = true;
 	}
 
 }

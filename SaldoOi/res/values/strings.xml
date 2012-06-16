@@ -109,6 +109,7 @@
         ]]>
     </string>
     <string name="view_boas_vindas_aceito">Entendi e aceito</string>
+    <string name="view_boas_vindas_aceito_desabilitado">Entendi e aceito (aguarde)</string>
     <string name="view_boas_vindas_rejeito">Não aceito</string>
 
 </resources>
