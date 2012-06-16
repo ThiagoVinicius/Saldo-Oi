@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <TextView
-        android:id="@+id/boas_vindas_textview"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:text="@string/view_boas_vindas_descricao" />
-
-    <Button
-        android:id="@+id/boas_vindas_botao"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:state_enabled="false"
-        android:text="@string/rotulo_entendi" />
+        android:orientation="vertical" >
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/boas_vindas_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/view_boas_vindas_descricao" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/boas_vindas_botao_negativo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="70dip"
+                android:paddingRight="70dip"
+                android:state_enabled="true"
+                android:text="@string/view_boas_vindas_rejeito" />
+
+            <Button
+                android:id="@+id/boas_vindas_botao_positivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/boas_vindas_botao_negativo"
+                android:layout_alignRight="@id/boas_vindas_botao_negativo"
+                android:layout_below="@id/boas_vindas_botao_negativo"
+                android:state_enabled="false"
+                android:text="@string/view_boas_vindas_aceito" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

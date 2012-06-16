@@ -108,5 +108,7 @@
         </p>
         ]]>
     </string>
+    <string name="view_boas_vindas_aceito">Entendi e aceito</string>
+    <string name="view_boas_vindas_rejeito">Não aceito</string>
 
 </resources>

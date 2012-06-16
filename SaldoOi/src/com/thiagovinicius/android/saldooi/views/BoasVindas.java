@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -42,7 +43,8 @@ public class BoasVindas extends Activity implements OnClickListener {
 	private static final int ATRASO_CONFIRMACAO = 10000; // 10 segundos
 
 	private TextView mTexto;
-	private Button mBotaoEntendi;
+	private Button mBotaoPositivo;
+	private Button mBotaoNegativo;
 	private SharedPreferences mPrefs;
 
 	private int mAtrasoDado = 0;
@@ -53,17 +55,18 @@ public class BoasVindas extends Activity implements OnClickListener {
 		@Override
 		public void run() {
 			int diferenca = ATRASO_CONFIRMACAO - mAtrasoDado;
-			String original = getResources().getString(R.string.rotulo_entendi);
+			String original = getResources().getString(
+					R.string.view_boas_vindas_aceito);
 			if (diferenca >= 0) {
 
-				mBotaoEntendi.setText(String.format("%s (%d)", original,
+				mBotaoPositivo.setText(String.format("%s (%d)", original,
 						diferenca / 1000));
-				mBotaoEntendi.setEnabled(false);
+				mBotaoPositivo.setEnabled(false);
 				mAtrasoDado += 1000;
 				mManipulador.postDelayed(this, 1000);
 			} else {
-				mBotaoEntendi.setText(original);
-				mBotaoEntendi.setEnabled(true);
+				mBotaoPositivo.setText(original);
+				mBotaoPositivo.setEnabled(true);
 			}
 		}
 	};
@@ -80,7 +83,8 @@ public class BoasVindas extends Activity implements OnClickListener {
 		Resources res = getResources();
 		setContentView(R.layout.boas_vindas);
 		mTexto = (TextView) findViewById(R.id.boas_vindas_textview);
-		mBotaoEntendi = (Button) findViewById(R.id.boas_vindas_botao);
+		mBotaoPositivo = (Button) findViewById(R.id.boas_vindas_botao_positivo);
+		mBotaoNegativo = (Button) findViewById(R.id.boas_vindas_botao_negativo);
 		mTexto.setText(Html.fromHtml(res
 				.getString(R.string.view_boas_vindas_descricao)));
 	}
@@ -88,7 +92,8 @@ public class BoasVindas extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mBotaoEntendi.setOnClickListener(this);
+		mBotaoPositivo.setOnClickListener(this);
+		mBotaoNegativo.setOnClickListener(this);
 		mAtrasoDado = 0;
 		mManipulador.post(mHabilitarBotaoEntendi);
 	}
@@ -96,18 +101,22 @@ public class BoasVindas extends Activity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mBotaoEntendi.setOnClickListener(null);
+		mBotaoPositivo.setOnClickListener(null);
+		mBotaoNegativo.setOnClickListener(null);
 		mManipulador.removeCallbacks(mHabilitarBotaoEntendi);
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v == mBotaoEntendi) {
+		if (v == mBotaoPositivo) {
 			SharedPreferences.Editor ed = mPrefs.edit();
 			ed.putInt(CHAVE_CONFIRMADO,
 					getResources().getInteger(R.integer.numero_versao));
 			ed.commit();
 			desviaParaTelaPrincipal();
+		}
+		if (v == mBotaoNegativo) {
+			desinstalaApp();
 		}
 	}
 
@@ -115,6 +124,12 @@ public class BoasVindas extends Activity implements OnClickListener {
 		Intent i = new Intent(this, Principal.class);
 		startActivity(i);
 		finish();
+	}
+
+	private void desinstalaApp() {
+		Intent i = new Intent(Intent.ACTION_DELETE,
+				Uri.parse("package:com.thiagovinicius.android.saldooi"));
+		startActivity(i);
 	}
 
 }
