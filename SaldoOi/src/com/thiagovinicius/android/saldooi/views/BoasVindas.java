@@ -72,8 +72,8 @@ public class BoasVindas extends Activity implements OnClickListener {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle estadoSalvo) {
+		super.onCreate(estadoSalvo);
 		mPrefs = getPreferences(MODE_PRIVATE);
 
 		if (mPrefs.contains(CHAVE_CONFIRMADO)) {
@@ -87,6 +87,12 @@ public class BoasVindas extends Activity implements OnClickListener {
 		mBotaoNegativo = (Button) findViewById(R.id.boas_vindas_botao_negativo);
 		mTexto.setText(Html.fromHtml(res
 				.getString(R.string.view_boas_vindas_descricao)));
+
+		if (estadoSalvo != null) {
+			mAtrasoDado = estadoSalvo.getInt("mAtrasoDado", 0);
+		} else {
+			mAtrasoDado = 0;
+		}
 	}
 
 	@Override
@@ -94,7 +100,6 @@ public class BoasVindas extends Activity implements OnClickListener {
 		super.onResume();
 		mBotaoPositivo.setOnClickListener(this);
 		mBotaoNegativo.setOnClickListener(this);
-		mAtrasoDado = 0;
 		mManipulador.post(mHabilitarBotaoEntendi);
 	}
 
@@ -104,6 +109,12 @@ public class BoasVindas extends Activity implements OnClickListener {
 		mBotaoPositivo.setOnClickListener(null);
 		mBotaoNegativo.setOnClickListener(null);
 		mManipulador.removeCallbacks(mHabilitarBotaoEntendi);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle salvandoEstado) {
+		super.onSaveInstanceState(salvandoEstado);
+		salvandoEstado.putInt("mAtrasoDado", mAtrasoDado);
 	}
 
 	@Override
@@ -130,6 +141,7 @@ public class BoasVindas extends Activity implements OnClickListener {
 		Intent i = new Intent(Intent.ACTION_DELETE,
 				Uri.parse("package:com.thiagovinicius.android.saldooi"));
 		startActivity(i);
+		mAtrasoDado = 0;
 	}
 
 }
