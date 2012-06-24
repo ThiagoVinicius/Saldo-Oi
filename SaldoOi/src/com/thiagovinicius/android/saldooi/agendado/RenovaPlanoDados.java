@@ -66,7 +66,7 @@ public class RenovaPlanoDados extends BroadcastReceiver {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
 		String result = pref.getString(PlanoDados.CHAVE_PLANO, "-1");
-		return new Integer(result);
+		return Integer.valueOf(result);
 	}
 
 	private String getTextoPlano(Context ctx, int idPlano) {

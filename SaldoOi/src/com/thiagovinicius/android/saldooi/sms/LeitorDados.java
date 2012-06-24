@@ -48,9 +48,9 @@ public class LeitorDados extends BroadcastReceiver {
 	private static Calendar decodificaData(String dataStr) {
 		Calendar cal = Calendar.getInstance();
 		String campos[] = dataStr.split("/");
-		cal.set(Calendar.DAY_OF_MONTH, new Integer(campos[0]));
-		cal.set(Calendar.MONTH, new Integer(campos[1]) - 1);
-		cal.set(Calendar.YEAR, new Integer(campos[2]));
+		cal.set(Calendar.DAY_OF_MONTH, Integer.valueOf(campos[0]));
+		cal.set(Calendar.MONTH, Integer.valueOf(campos[1]) - 1);
+		cal.set(Calendar.YEAR, Integer.valueOf(campos[2]));
 		return cal;
 	}
 
@@ -104,7 +104,8 @@ public class LeitorDados extends BroadcastReceiver {
 			logger.debug("Mensagem de saldo detectada; {} grupos",
 					comparador.groupCount());
 			if (comparador.groupCount() == 2) {
-				saldo = (int) (new Double(comparador.group(1).replace(',', '.')) * 100d);
+				saldo = (int) (Double.valueOf(comparador.group(1).replace(',',
+						'.')) * 100d);
 				data = decodificaDataMesmoDia(comparador.group(2));
 				logger.info("Saldo: {} => {}", comparador.group(1), saldo);
 				logger.info("Validade: {} => {}", comparador.group(2), data);
@@ -131,7 +132,7 @@ public class LeitorDados extends BroadcastReceiver {
 
 				try {
 
-					saldo = new Integer(comparador.group(1));
+					saldo = Integer.valueOf(comparador.group(1));
 					validade = decodificaDataDiaSeguinte(comparador.group(2));
 
 					PacoteDados entrada = new PacoteDados();
@@ -211,7 +212,8 @@ public class LeitorDados extends BroadcastReceiver {
 
 				try {
 
-					saldo = new Double(comparador.group(1).replace(',', '.'));
+					saldo = Double.valueOf(comparador.group(1)
+							.replace(',', '.'));
 					validade = decodificaDataDiaSeguinte(comparador.group(2));
 
 					PacoteDados entrada = new PacoteDados();

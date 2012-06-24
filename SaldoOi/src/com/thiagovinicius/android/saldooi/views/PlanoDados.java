@@ -217,7 +217,7 @@ public class PlanoDados extends PreferenceActivity implements
 				R.array.renova_dados_valores_descricao);
 
 		if (prefs.contains(CHAVE_PLANO)) {
-			seletorTipo.setSummary(valores[new Integer(prefs.getString(
+			seletorTipo.setSummary(valores[Integer.valueOf(prefs.getString(
 					CHAVE_PLANO, "0"))]);
 		} else {
 			seletorTipo
