@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res/com.thiagovinicius.android.saldooi" >
+
+    <com.thiagovinicius.android.saldooi.views.PreferenceComIcone
+        android:title="@string/view_plano_dados"
+        settings:icone="@drawable/ic_plano_dados" >
+        <intent
+            android:targetClass="com.thiagovinicius.android.saldooi.views.PlanoDados"
+            android:targetPackage="com.thiagovinicius.android.saldooi" />
+    </com.thiagovinicius.android.saldooi.views.PreferenceComIcone>
+
+</PreferenceScreen>

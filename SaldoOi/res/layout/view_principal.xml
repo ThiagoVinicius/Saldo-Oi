@@ -11,9 +11,9 @@
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:text="@string/view_principal_descricao"/>
 
-    <view
+    <ListView
         class="com.thiagovinicius.android.saldooi.views.Principal$SubAtividades"
-        android:id="@+id/principal_subatividades"
+        android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
 
