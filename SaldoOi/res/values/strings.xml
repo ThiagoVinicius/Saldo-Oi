@@ -65,7 +65,7 @@
 
     <string name="view_sobre_versao_titulo">Versão</string>
 
-    <string name="view_sobre_projeto_titulo">Projeto de código livre</string>
+    <string name="view_sobre_projeto_titulo">Projeto no GitHub</string>
     <string name="view_sobre_projeto_url">https://github.com/ThiagoVinicius/Saldo-Oi</string>
 
     <string name="view_sobre_licencas">Licenças</string>
