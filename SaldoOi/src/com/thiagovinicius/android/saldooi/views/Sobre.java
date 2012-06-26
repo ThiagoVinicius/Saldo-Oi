@@ -31,6 +31,7 @@ import android.preference.PreferenceActivity;
 import android.text.Html;
 import android.widget.TextView;
 
+import com.thiagovinicius.android.saldooi.BuildConfig;
 import com.thiagovinicius.android.saldooi.R;
 
 /**
@@ -106,6 +107,20 @@ public class Sobre extends PreferenceActivity {
 				R.string.view_sobre_versao_titulo);
 		String nomeVersao = getResources().getString(R.string.nome_versao);
 		prefVersao.setTitle(String.format("%s: %s", prefixoVersao, nomeVersao));
+		removeInfoScmRelease(prefVersao);
+
+	}
+
+	/*
+	 * O código desse método gera um warning, porque BuildConfig.DEBUG é uma
+	 * variável final. Entretanto, essa a classe BuildConfig é recriada durante
+	 * a construção do projeto.
+	 */
+	@SuppressWarnings("unused")
+	private void removeInfoScmRelease (Preference pref) {
+		if (BuildConfig.DEBUG == false) {
+			pref.setSummary("");
+		}
 	}
 
 }
