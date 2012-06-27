@@ -20,6 +20,9 @@ package com.thiagovinicius.android.saldooi.util;
 
 import java.util.Calendar;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.SmsManager;
 
 public class Utils {
@@ -40,4 +43,12 @@ public class Utils {
 		return hoje;
 	}
 
+	public static PackageInfo getInfoPacote(Context ctx) {
+		try {
+			return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+		} catch (NameNotFoundException e) {
+			//This should not really happen
+			return null;
+		}
+	}
 }

@@ -18,9 +18,11 @@
 
 package com.thiagovinicius.android.saldooi.views;
 
+import static com.thiagovinicius.android.saldooi.util.Utils.getInfoPacote;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -145,8 +147,8 @@ public class BoasVindas extends Activity implements OnClickListener {
 
 	private void salvaConfirmacao() {
 		SharedPreferences.Editor ed = mPrefs.edit();
-		ed.putInt(CHAVE_CONFIRMADO,
-				getResources().getInteger(R.integer.numero_versao));
+		PackageInfo info = getInfoPacote(this);
+		ed.putInt(CHAVE_CONFIRMADO, info == null ? 0 : info.versionCode);
 		ed.commit();
 	}
 

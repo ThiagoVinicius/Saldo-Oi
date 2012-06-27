@@ -18,12 +18,15 @@
 
 package com.thiagovinicius.android.saldooi.views;
 
+import static com.thiagovinicius.android.saldooi.util.Utils.getInfoPacote;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -102,10 +105,11 @@ public class Sobre extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.sobre);
 
+		PackageInfo info = getInfoPacote(this);
 		Preference prefVersao = findPreference("versao");
 		String prefixoVersao = getResources().getString(
 				R.string.view_sobre_versao_titulo);
-		String nomeVersao = getResources().getString(R.string.nome_versao);
+		String nomeVersao = (info == null ? "" : info.versionName);
 		prefVersao.setTitle(String.format("%s: %s", prefixoVersao, nomeVersao));
 		removeInfoScmRelease(prefVersao);
 
