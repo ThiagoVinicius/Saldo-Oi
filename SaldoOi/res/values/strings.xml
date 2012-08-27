@@ -8,13 +8,13 @@
     </string-array>
     <string-array name="renova_dados_valores_descricao">
         <item>5MB (1 dia)</item>
-        <item>20MB (1 semana)</item>
-        <item>50MB (1 mes)</item>
+        <item>15MB (1 semana)</item>
+        <item>30MB (1 mês)</item>
     </string-array>
     <string-array name="renova_dados_destinatarios">
         <item>3505</item>
-        <item>3520</item>
-        <item>3550</item>
+        <item>3515</item>
+        <item>3530</item>
     </string-array>
     <string-array name="renova_dados_texto_mensagem">
         <item>Oi</item>
